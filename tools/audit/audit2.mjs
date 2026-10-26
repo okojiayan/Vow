@@ -43,6 +43,7 @@ for (const route of ROUTES) {
       const row = { route, theme, width: w };
       try {
         await p.goto(BASE + route + (theme === 'warden' ? (route.includes('?') ? '&mode=warden' : '?mode=warden') : ''), { waitUntil: 'networkidle', timeout: 30000 });
+        if (route === '/tasks') { await p.waitForFunction(() => !!document.querySelector('table') || /No tasks yet|No tasks match/.test(document.body.textContent || ''), { timeout: 15000 }).catch(() => {}); }
         await p.waitForTimeout(700);
         if (theme === 'warden') {
           try { const done = p.getByText('Done (Esc)', { exact: false }); if (await done.count()) await done.first().click(); } catch {}
