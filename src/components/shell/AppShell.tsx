@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { MessageSquareText, PanelRight, Plus, SquareCheckBig } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { ModeProvider, useMode } from "./ModeContext";
@@ -14,10 +15,12 @@ import { shouldPlayActivation } from "@/lib/task-display";
 import { WardenTransformation } from "@/components/vow/WardenTransformation";
 import { PersistentLiveActivity } from "@/components/live/PersistentLiveActivity";
 import { DEFAULT_PREFERENCES, loadPreferences, type UiPreferences } from "@/lib/preferences";
+import { CommandPalette, type PaletteItem } from "@/components/ui/CommandPalette";
 
 function ShellChrome({ children }: { children: React.ReactNode }) {
-  const { warden } = useMode();
-  const { drawerOpen, sidebarOpen, setSidebarOpen, toggleSidebar, toggleDrawer, requestNewChat } = useChrome();
+  const { warden, toggleWarden } = useMode();
+  const { drawerOpen, sidebarOpen, setSidebarOpen, toggleSidebar, toggleDrawer, requestNewChat, paletteOpen, setPaletteOpen } = useChrome();
+  const router = useRouter();
   const [prefs, setPrefs] = useState<UiPreferences>(DEFAULT_PREFERENCES);
   const [transforming, setTransforming] = useState(false);
   const [transformEntering, setTransformEntering] = useState(true);
@@ -38,8 +41,8 @@ function ShellChrome({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const meta = e.metaKey || e.ctrlKey;
-      // Cmd+K: new chat
-      if (meta && e.key === "k" && !e.shiftKey) { e.preventDefault(); requestNewChat(); }
+      // Cmd+K: command palette (navigation + actions)
+      if (meta && e.key === "k" && !e.shiftKey) { e.preventDefault(); setPaletteOpen(true); }
       // Cmd+Shift+M: toggle task monitor
       if (meta && e.shiftKey && (e.key === "m" || e.key === "M")) { e.preventDefault(); toggleDrawer(); }
       // Cmd+\: toggle sidebar
@@ -47,7 +50,7 @@ function ShellChrome({ children }: { children: React.ReactNode }) {
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [requestNewChat, toggleDrawer, toggleSidebar]);
+  }, [requestNewChat, toggleDrawer, toggleSidebar, setPaletteOpen]);
 
   // Security visuals switch instantly via body class + CSS. The transformation
   // overlay is purely celebratory: it never moves focus, never scrolls, and never
@@ -94,11 +97,11 @@ function ShellChrome({ children }: { children: React.ReactNode }) {
           <Topbar />
         </div>
         {isChat ? (
-          <div className="ds-scope shell-content" data-theme={effective}>
+          <div className="ds-scope shell-content" data-theme={effective} role="main">
             {children}
           </div>
         ) : (
-          <div className="shell-content">{children}</div>
+          <div className="shell-content" role="main">{children}</div>
         )}
         <div className="ds-scope" data-theme={effective}>
           <MobileNav />
@@ -111,8 +114,68 @@ function ShellChrome({ children }: { children: React.ReactNode }) {
       {transforming ? (
         <WardenTransformation entering={transformEntering} onSkip={endTransform} onDone={endTransform} />
       ) : null}
+      <div className="ds-scope" data-theme={effective}>
+        <GlobalCommandPalette
+          open={paletteOpen}
+          onClose={() => setPaletteOpen(false)}
+          go={(href) => { setPaletteOpen(false); router.push(href); }}
+          onNewChat={() => { setPaletteOpen(false); requestNewChat(); }}
+          onToggleActivity={() => { setPaletteOpen(false); toggleDrawer(); }}
+          onToggleSidebar={() => { setPaletteOpen(false); toggleSidebar(); }}
+          onToggleWarden={() => { setPaletteOpen(false); toggleWarden(); }}
+          warden={warden}
+        />
+      </div>
     </div>
   );
+}
+
+const PALETTE_ROUTES: Array<[string, string]> = [
+  ["/", "Chat — start or resume a conversation"],
+  ["/tasks", "Tasks — runs, approvals, verification"],
+  ["/memory", "Memory — preferences, facts, documents"],
+  ["/routines", "Routines — recurring agent work"],
+  ["/tools", "Integrations — tools and connections"],
+  ["/skills", "Skills — agent capabilities"],
+  ["/library", "Knowledge — saved notes and library"],
+  ["/search", "Search — chats, tasks, memory"],
+  ["/history", "History — past conversations"],
+  ["/evaluation", "Evaluation — baseline vs VOW"],
+  ["/settings", "Settings — workspace controls"],
+  ["/account", "Account — local profile"],
+  ["/devices", "Devices — this device"],
+];
+
+function GlobalCommandPalette({
+  open,
+  onClose,
+  go,
+  onNewChat,
+  onToggleActivity,
+  onToggleSidebar,
+  onToggleWarden,
+  warden,
+}: {
+  open: boolean;
+  onClose: () => void;
+  go: (href: string) => void;
+  onNewChat: () => void;
+  onToggleActivity: () => void;
+  onToggleSidebar: () => void;
+  onToggleWarden: () => void;
+  warden: boolean;
+}) {
+  const items: PaletteItem[] = [
+    { id: "new-chat", label: "New chat", hint: "Start a fresh conversation", kind: "action", onRun: onNewChat },
+    ...PALETTE_ROUTES.map(([href, label]): PaletteItem => {
+      const [name, hint] = label.split(" — ");
+      return { id: `go-${href}`, label: `Go to ${name}`, hint: hint ?? "", kind: "action", onRun: () => go(href) };
+    }),
+    { id: "toggle-activity", label: "Toggle Activity panel", hint: "Show or hide the live panel", kind: "action", onRun: onToggleActivity },
+    { id: "toggle-sidebar", label: "Toggle sidebar", hint: "Show or hide navigation", kind: "action", onRun: onToggleSidebar },
+    { id: "toggle-warden", label: warden ? "Exit Warden mode" : "Enter Warden mode", hint: warden ? "Leave strict enforcement" : "Strict enforcement + evidence-first", kind: "guard", onRun: onToggleWarden },
+  ];
+  return <CommandPalette open={open} onClose={onClose} items={items} />;
 }
 
 // Deliberate responsive shortcut: on narrow viewports the sidebar rail is

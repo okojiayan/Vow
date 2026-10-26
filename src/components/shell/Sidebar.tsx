@@ -53,7 +53,7 @@ function iconFor(c: RecentConversation) {
 export function Sidebar({ rail = false }: { rail?: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { requestNewChat, setSidebarOpen } = useChrome();
+  const { requestNewChat, setSidebarOpen, setPaletteOpen } = useChrome();
   const { warden, toggleWarden } = useMode();
   const { setting, setSetting } = useTheme();
   const [name, setName] = useState("Ayan");
@@ -93,13 +93,13 @@ export function Sidebar({ rail = false }: { rail?: boolean }) {
       }
       if ((e.metaKey || e.ctrlKey) && e.key === "k" && !e.shiftKey) {
         e.preventDefault();
-        requestNewChat();
+        setPaletteOpen(true);
       }
     };
     document.addEventListener("mousedown", onDoc);
     document.addEventListener("keydown", onKey);
     return () => { document.removeEventListener("mousedown", onDoc); document.removeEventListener("keydown", onKey); };
-  }, [setSidebarOpen, requestNewChat]);
+  }, [setSidebarOpen, requestNewChat, setPaletteOpen]);
 
   const go = (href: string) => { setMenuOpen(false); if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false); router.push(href); };
   // Order policy: most recently active conversations first, so security-test

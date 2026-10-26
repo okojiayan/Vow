@@ -55,7 +55,7 @@ export function Finder({
   const [debounced, setDebounced] = useState("");
   const [activeId, setActiveId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
-  const itemRefs = useRef(new Map<string, HTMLButtonElement>());
+  const itemRefs = useRef(new Map<string, HTMLElement>());
 
   useEffect(() => {
     const id = window.setTimeout(() => setDebounced(query), 200);
@@ -138,43 +138,44 @@ export function Finder({
             style={{ display: "grid", gap: "var(--ds-space-4)", minWidth: 0 }}
           >
             {filtered.map((g) => (
-              <section key={g.key} aria-label={g.label} style={{ minWidth: 0 }}>
-                <h2 style={{ fontSize: "var(--ds-text-13)", fontWeight: 600, color: "var(--ds-muted)", textTransform: "uppercase", letterSpacing: "0.05em", margin: "0 0 var(--ds-space-2)" }}>
+              <section key={g.key} role="group" aria-label={g.label} style={{ minWidth: 0, display: "grid", gap: "var(--ds-space-2)" }}>
+                <h2 role="presentation" style={{ fontSize: "var(--ds-text-13)", fontWeight: 600, color: "var(--ds-muted)", textTransform: "uppercase", letterSpacing: "0.05em", margin: "0 0 var(--ds-space-2)" }}>
                   {g.label} ({g.items.length})
                 </h2>
-                <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: "var(--ds-space-2)" }}>
-                  {g.items.map((item) => {
+                {g.items.map((item) => {
                     const selected = item.id === activeId;
                     return (
-                      <li key={item.id}>
-                        <button
-                          ref={(el) => {
-                            if (el) itemRefs.current.set(item.id, el);
-                            else itemRefs.current.delete(item.id);
-                          }}
-                          type="button"
-                          role="option"
-                          aria-selected={selected}
-                          onClick={() => setActiveId(item.id)}
-                          onDoubleClick={() => onOpen?.(item)}
-                          className="ds-btn"
-                          style={{
-                            width: "100%",
-                            textAlign: "left",
-                            display: "block",
-                            background: selected ? "var(--ds-accent-wash)" : "var(--ds-surface)",
-                            border: `1px solid ${selected ? "var(--ds-accent)" : "var(--ds-border)"}`,
-                            borderRadius: "var(--ds-radius-md)",
-                            padding: "10px 14px",
-                          }}
-                        >
+                      <li
+                        key={item.id}
+                        ref={(el) => {
+                          if (el) itemRefs.current.set(item.id, el);
+                          else itemRefs.current.delete(item.id);
+                        }}
+                        role="option"
+                        aria-selected={selected}
+                        tabIndex={0}
+                        onClick={() => setActiveId(item.id)}
+                        onDoubleClick={() => onOpen?.(item)}
+                        onKeyDown={(e) => {
+                          if (e.key === " ") e.preventDefault();
+                        }}
+                        className="ds-btn"
+                        style={{
+                          width: "100%",
+                          textAlign: "left",
+                          display: "block",
+                          cursor: "pointer",
+                          background: selected ? "var(--ds-accent-wash)" : "var(--ds-surface)",
+                          border: `1px solid ${selected ? "var(--ds-accent)" : "var(--ds-border)"}`,
+                          borderRadius: "var(--ds-radius-md)",
+                          padding: "10px 14px",
+                        }}
+                      >
                           <span style={{ display: "block", fontSize: "var(--ds-text-14)", fontWeight: selected ? 600 : 500, color: "var(--ds-ink)", overflowWrap: "break-word" }}>{item.title}</span>
                           <span style={{ display: "block", fontSize: "var(--ds-text-13)", color: "var(--ds-muted)", marginTop: 2 }}>{item.meta}</span>
-                        </button>
                       </li>
                     );
                   })}
-                </ul>
               </section>
             ))}
           </div>

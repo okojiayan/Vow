@@ -427,7 +427,7 @@ function WorkspaceInner() {
         {isEmpty ? (
           <div className="shell-empty">
             <HomeMascot warden={wardenVisual} />
-            <p className="shell-greet">{greeting.headline} {greeting.sub}</p>
+            <h1 className="shell-greet">{greeting.headline} {greeting.sub}</h1>
             <div className="shell-sugs" role="group" aria-label="Suggestions">
               {CHIPS.map(({ label, text }) => (
                 <button key={label} type="button" onClick={() => handleChip(text)} disabled={sending} className="shell-sug-link">

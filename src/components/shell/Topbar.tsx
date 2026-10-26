@@ -69,12 +69,12 @@ export function Topbar() {
             type="button"
             onClick={toggleDrawer}
             aria-pressed={drawerOpen}
-            aria-label={drawerOpen ? "Hide activity (⌘⇧M)" : "Show activity (⌘⇧M)"}
-            title={drawerOpen ? "Hide activity (⌘⇧M)" : "Show activity (⌘⇧M)"}
+            aria-label={drawerOpen ? "Hide Activity (⌘⇧M)" : "Show Activity (⌘⇧M)"}
+            title={drawerOpen ? "Hide Activity (⌘⇧M)" : "Show Activity (⌘⇧M)"}
             className="shell-monitor-btn"
           >
             <PanelRight size={14} aria-hidden="true" />
-            <span>Monitor</span>
+            <span>Activity</span>
           </button>
           <span className="shell-mode-divider" aria-hidden="true" />
           <AutonomyMenu value={uiMode} onChange={setUiMode} />

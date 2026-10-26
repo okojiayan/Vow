@@ -499,6 +499,9 @@ export function PersistentLiveActivity() {
                     </span>
                     <span style={{ minWidth: 0 }}>
                       <span className="shell-trace-t" title={e.title}>{h.title}</span>
+                      {e.detail ? (
+                        <span className="shell-trace-time" style={{ display: "block", overflowWrap: "break-word" }}>{e.detail}</span>
+                      ) : null}
                       <span className="shell-trace-time">{relativeTime(e.createdAt) ?? "—"}</span>
                     </span>
                   </li>

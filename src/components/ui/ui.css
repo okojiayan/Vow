@@ -78,3 +78,9 @@
   .ds-finder-grid { grid-template-columns: minmax(0, 1fr) !important; }
   .ds-finder-preview { position: static !important; }
 }
+
+/* Settings: two-column section layout collapses on narrow screens. */
+@media (max-width: 760px) {
+  .settings-cols { grid-template-columns: minmax(0, 1fr) !important; }
+  .settings-cols > nav { position: static !important; }
+}

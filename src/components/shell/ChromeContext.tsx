@@ -21,6 +21,8 @@ interface ChromeState {
   setUnreadCount: (n: number) => void;
   pendingApprovals: number;
   setPendingApprovals: (n: number) => void;
+  paletteOpen: boolean;
+  setPaletteOpen: (open: boolean) => void;
 }
 
 const ChromeContext = createContext<ChromeState>({
@@ -42,6 +44,8 @@ const ChromeContext = createContext<ChromeState>({
   setUnreadCount: () => {},
   pendingApprovals: 0,
   setPendingApprovals: () => {},
+  paletteOpen: false,
+  setPaletteOpen: () => {},
 });
 
 export function ChromeProvider({ children }: { children: React.ReactNode }) {
@@ -70,6 +74,7 @@ export function ChromeProvider({ children }: { children: React.ReactNode }) {
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
   const [pendingApprovals, setPendingApprovals] = useState(0);
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const toggleDrawer = useCallback(() => setDrawerOpen((v) => !v), []);
   const toggleSidebar = useCallback(() => setSidebarOpen((v) => !v), []);
   const requestNewChat = useCallback(() => {
@@ -80,8 +85,8 @@ export function ChromeProvider({ children }: { children: React.ReactNode }) {
   }, []);
   const requestPrewarm = useCallback(() => setPrewarmSignal((n) => n + 1), []);
   const value = useMemo(
-    () => ({ drawerOpen, setDrawerOpen, toggleDrawer, sidebarOpen, setSidebarOpen, toggleSidebar, newChatSignal, requestNewChat, prewarmSignal, requestPrewarm, conversationTitle, setConversationTitle, conversationId, setConversationId, unreadCount, setUnreadCount, pendingApprovals, setPendingApprovals }),
-    [drawerOpen, toggleDrawer, sidebarOpen, toggleSidebar, newChatSignal, requestNewChat, prewarmSignal, requestPrewarm, conversationTitle, conversationId, unreadCount, pendingApprovals],
+    () => ({ drawerOpen, setDrawerOpen, toggleDrawer, sidebarOpen, setSidebarOpen, toggleSidebar, newChatSignal, requestNewChat, prewarmSignal, requestPrewarm, conversationTitle, setConversationTitle, conversationId, setConversationId, unreadCount, setUnreadCount, pendingApprovals, setPendingApprovals, paletteOpen, setPaletteOpen }),
+    [drawerOpen, toggleDrawer, sidebarOpen, toggleSidebar, newChatSignal, requestNewChat, prewarmSignal, requestPrewarm, conversationTitle, conversationId, unreadCount, pendingApprovals, paletteOpen],
   );
   return <ChromeContext.Provider value={value}>{children}</ChromeContext.Provider>;
 }
