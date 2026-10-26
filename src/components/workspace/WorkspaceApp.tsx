@@ -347,13 +347,17 @@ function WorkspaceInner() {
   // mount so server HTML and the first client render always agree (the demo
   // carries timestamps). Realistic examples; real backend state wins.
   // Display-only: the backend is never touched.
+  // ?demo= hooks are compiled out of production: Next.js inlines NODE_ENV,
+  // so the minifier drops the demo branch entirely from prod bundles.
+  const allowDemoHooks = process.env.NODE_ENV !== "production";
   const [demoKind, setDemoKind] = useState<string | null>(null);
   useEffect(() => {
+    if (!allowDemoHooks) return;
     try {
       setDemoKind(new URLSearchParams(window.location.search).get("demo"));
     } catch { /* ignore */ }
-  }, []);
-  const demoTask: TaskItem | null = demoKind === "task" || demoKind === "approval" ? {
+  }, [allowDemoHooks]);
+  const demoTask: TaskItem | null = !allowDemoHooks ? null : demoKind === "task" || demoKind === "approval" ? {
     id: "demo-task-01",
     conversationId: conversationId ?? "demo",
     parentTaskId: null,
@@ -373,7 +377,7 @@ function WorkspaceInner() {
     error: null,
     outcome: null,
   } : null;
-  const demoApprovals: ApprovalItem[] = demoKind === "approval" && demoTask ? [{
+  const demoApprovals: ApprovalItem[] = !allowDemoHooks ? [] : demoKind === "approval" && demoTask ? [{
     id: "demo-approval-01",
     taskId: demoTask.id,
     tool: "filesystem.write",

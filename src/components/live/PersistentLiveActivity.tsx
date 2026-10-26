@@ -118,12 +118,16 @@ export function PersistentLiveActivity() {
   // mount so server HTML and the first client render always agree (the demo
   // carries a timestamp). Realistic examples; real backend state wins.
   // Display-only: the backend is never touched.
+  // ?demo= hook is compiled out of production: Next.js inlines NODE_ENV,
+  // so the minifier drops the demo branch entirely from prod bundles.
+  const allowDemoHooks = process.env.NODE_ENV !== "production";
   const [demoKind, setDemoKind] = useState<string | null>(null);
   useEffect(() => {
+    if (!allowDemoHooks) return;
     try {
       setDemoKind(new URLSearchParams(window.location.search).get("demo"));
     } catch { /* ignore */ }
-  }, []);
+  }, [allowDemoHooks]);
 
   useEffect(() => {
     try {
@@ -193,7 +197,7 @@ export function PersistentLiveActivity() {
     void refresh();
   }, [refresh]);
 
-  const demoTask: MonitorTask | null = demoKind === "task" || demoKind === "approval" ? {
+  const demoTask: MonitorTask | null = !allowDemoHooks ? null : demoKind === "task" || demoKind === "approval" ? {
     id: "demo-task-01",
     request: "Summarize the Q3 planning notes into decisions and owners",
     conversationId: chromeConversationId ?? "demo",
@@ -207,7 +211,7 @@ export function PersistentLiveActivity() {
       ],
     },
   } : null;
-  const demoApprovalList: ApprovalItem[] = demoKind === "approval" && demoTask ? [{
+  const demoApprovalList: ApprovalItem[] = !allowDemoHooks ? [] : demoKind === "approval" && demoTask ? [{
     id: "demo-approval-01",
     taskId: demoTask.id,
     tool: "filesystem.write",

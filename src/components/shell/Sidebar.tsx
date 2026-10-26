@@ -119,17 +119,23 @@ export function Sidebar({ rail = false }: { rail?: boolean }) {
   }, [setSidebarOpen, requestNewChat]);
 
   const go = (href: string) => { setMenuOpen(false); if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false); router.push(href); };
-  const source = recents ?? [];
-  void source;
+  // Placeholder recents are a dev-only visual fallback: Next.js inlines
+  // NODE_ENV, so production bundles drop the canonical list and show real
+  // conversations (or an honest empty state) instead of mock titles.
+  const allowPlaceholderRecents = process.env.NODE_ENV !== "production";
   // Order policy: most recently active conversations first, so security-test
   // commands and other older history never outrank current work. History
   // itself is never modified or hidden by this ordering.
   const canonicalList = warden ? CANONICAL_RECENT_WARDEN : CANONICAL_RECENT_NORMAL;
+  const liveRecents = (recents ?? []).slice(0, 8);
+  const recentSource = liveRecents.length > 0
+    ? liveRecents
+    : (allowPlaceholderRecents ? canonicalList : []);
   const filteredRecents = searchQuery.trim()
-    ? canonicalList.filter((c) => c.title.toLowerCase().includes(searchQuery.toLowerCase()))
-    : canonicalList;
+    ? recentSource.filter((c) => ("title" in c ? c.title : titleFor(c as RecentConversation)).toLowerCase().includes(searchQuery.toLowerCase()))
+    : recentSource;
   const visible = showAll ? filteredRecents : filteredRecents.slice(0, 6);
-  const loaded = true;
+  const loaded = recents !== null;
 
   const primaryLinks = SIDEBAR_LINKS.filter((l) => PRIMARY_HREFS.has(l.href)).sort((a, b) => PRIMARY_ORDER.indexOf(a.href) - PRIMARY_ORDER.indexOf(b.href));
 
@@ -252,7 +258,7 @@ export function Sidebar({ rail = false }: { rail?: boolean }) {
             })}
           </ul>
         )}
-        {canonicalList.length > 5 ? (
+        {recentSource.length > 5 ? (
           <button type="button" className="shell-recent" onClick={() => setShowAll((v) => !v)} aria-expanded={showAll}>
             <span className="shell-trace-ic" aria-hidden="true"><ChevronDown size={15} style={{ transform: showAll ? "rotate(180deg)" : undefined }} /></span>
             <span className="shell-recent-t">{showAll ? "Show less" : "Show more"}</span>
