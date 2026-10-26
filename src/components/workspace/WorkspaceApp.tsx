@@ -2,7 +2,6 @@
 
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   ArrowUp, ChevronDown, Cpu, Mic, Paperclip, Square, UserRound,
@@ -66,10 +65,6 @@ interface ApprovalItem {
   status: string;
 }
 
-function stepLabel(status: string): string {
-  return stepStatusText(status);
-}
-
 const CHIPS = [
   { label: "Research a topic and draft findings", text: "Research the latest developments in this area, compare the options, and create a short report with key insights." },
   { label: "Draft a note from my idea", text: "Create a new note that captures my idea, with a clear title and next steps." },
@@ -96,7 +91,7 @@ export function WorkspaceApp() {
 
 function WorkspaceInner() {
   const { uiMode, warden: wardenVisual, setUiMode } = useMode();
-  const { setDrawerOpen, newChatSignal, setConversationId: setChromeConversationId } = useChrome();
+  const { newChatSignal, setConversationId: setChromeConversationId } = useChrome();
   const [composerText, setComposerText] = useState("");
   const [attached, setAttached] = useState<string[]>([]);
   const [recording, setRecording] = useState(false);
@@ -242,7 +237,6 @@ function WorkspaceInner() {
   const isActive = cardState
     ? (isWorkingState(cardState) && !isStaleCard) || (cardState === "waiting_approval" && !isStaleCard)
     : false;
-  const isWorking = cardState ? isWorkingState(cardState) && !isStaleCard : false;
 
   useEffect(() => {
     if (!isActive) return;
