@@ -25,7 +25,7 @@
   border: 1px solid var(--ds-border-strong); border-bottom-width: 2px; border-radius: 4px;
   padding: 3px 5px; background: var(--ds-surface-2); color: var(--ds-muted); white-space: nowrap;
 }
-.ds-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.ds-sr { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* Every tappable target is at least 44px tall. */
 .ds-btn { min-height: 44px; box-sizing: border-box; touch-action: manipulation; }
@@ -83,4 +83,17 @@
 @media (max-width: 760px) {
   .settings-cols { grid-template-columns: minmax(0, 1fr) !important; }
   .settings-cols > nav { position: static !important; }
+}
+
+/* Data table: stacked card rows under 640px. thead is visually hidden but kept
+   for assistive tech; each cell is prefixed with its column label via
+   data-label. Row actions stay full-width and keep the 44px target. */
+@media (max-width: 639px) {
+  .ds-table table, .ds-table tbody, .ds-table tr, .ds-table td { display: block; width: 100%; box-sizing: border-box; }
+  .ds-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .ds-table tbody tr { padding: var(--ds-space-2) 0; }
+  .ds-table td { padding-top: 5px; padding-bottom: 5px; }
+  .ds-table td::before { content: attr(data-label); display: block; font-size: var(--ds-text-12); font-weight: 600; color: var(--ds-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .ds-table td[data-label=""]::before { display: none; }
+  .ds-table td .ds-btn { width: 100%; }
 }

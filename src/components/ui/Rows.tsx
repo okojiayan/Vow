@@ -20,7 +20,7 @@ export function Table<T extends { id: string }>({
   rows: T[];
 }) {
   return (
-    <div style={{ overflowX: "auto", border: "1px solid var(--ds-border)", borderRadius: "var(--ds-radius-lg)", background: "var(--ds-surface)" }}>
+    <div className="ds-table" style={{ overflowX: "auto", border: "1px solid var(--ds-border)", borderRadius: "var(--ds-radius-lg)", background: "var(--ds-surface)" }}>
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "var(--ds-text-14)" }}>
         <caption className="ds-sr">{label}</caption>
         <thead>
@@ -52,7 +52,7 @@ export function Table<T extends { id: string }>({
               style={{ borderBottom: "1px solid var(--ds-border)", cursor: "default" }}
             >
               {columns.map((c) => (
-                <td key={c.key} style={{ padding: "12px 16px", color: "var(--ds-ink)" }}>
+                <td key={c.key} data-label={c.header || ""} style={{ padding: "12px 16px", color: "var(--ds-ink)" }}>
                   {c.render(row)}
                 </td>
               ))}
