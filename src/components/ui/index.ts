@@ -2,6 +2,7 @@ export { Button, type ButtonVariant, type ButtonSize } from "./Button";
 export { Field, Input, Textarea, Select, Checkbox, Switch } from "./fields";
 export { Segmented } from "./Segmented";
 export { Tabs } from "./Tabs";
+export { Stepper } from "./Stepper";
 export { Badge, StatusBadge, StatusInline, VerificationBadge, PermissionBadge, StaleNote, BlockedNote, type TaskStatus, type VerificationState, type PermissionLevel } from "./badges";
 export { Table, ListRow, type Column } from "./Rows";
 export { Menu, Popover, Tooltip, Dialog, Drawer, Toast } from "./overlays";

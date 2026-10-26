@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   BookOpen, CalendarDays, ChevronDown, ChevronRight, ChevronsLeft, CircleHelp, LayoutGrid,
   Layers, LogOut, MessageSquareText, ShieldCheck, Search, Settings, SquareCheckBig, UserRound, Plus, FileText, FolderOpen,
-  Sparkles, BarChart3, Puzzle,
+  Sparkles, BarChart3,
 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
@@ -21,10 +21,9 @@ export const SIDEBAR_LINKS = [
   { href: "/memory", label: "Memory", icon: Layers, title: "Long-term memories, knowledge and preferences" },
   { href: "/routines", label: "Routines", icon: CalendarDays, title: "Recurring agent workflows and automations" },
   { href: "/skills", label: "Skills", icon: Sparkles, title: "Skills marketplace and agent extensions" },
-  { href: "/tools", label: "Tools", icon: LayoutGrid, title: "Connected tools, devices, and integrations", expandable: true },
+  { href: "/tools", label: "Integrations", icon: LayoutGrid, title: "Built-in tools and connected services", expandable: true },
   { href: "/library", label: "Knowledge", icon: BookOpen, title: "Knowledge base and saved notes" },
   { href: "/search", label: "Search", icon: Search, title: "Search conversations, tasks, and memory" },
-  { href: "/plugins/notion", label: "Plugins", icon: Puzzle, title: "Active plugin workspaces (Notion & more)" },
   { href: "/evaluation", label: "Evaluation", icon: BarChart3, title: "Reliability & Correctness benchmark harness" },
 ];
 
