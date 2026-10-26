@@ -4,7 +4,6 @@ import { AppShell } from "@/components/shell/AppShell";
 import "./globals.css";
 import "./vow-final.css";
 import "./vow-rebuild.css";
-import "./vow-shell-fix.css";
 import "@/app/design-system/tokens.css";
 import "@/components/ui/ui.css";
 import "@/components/shell/shell-ds.css";
