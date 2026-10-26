@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
-  Activity, Check, Cpu, FileText,
+  Activity, Ban, Check, Clock, Cpu, FileText,
   Globe, Maximize2, Pin, RotateCw, ShieldAlert,
   ShieldCheck, X,
 } from "lucide-react";
@@ -55,6 +55,41 @@ interface TraceEvent {
   title: string;
   detail?: string;
   createdAt: string;
+}
+
+interface PolicyEvent {
+  id: string;
+  kind: string;
+  tool?: string;
+  decision: string;
+  policy: string;
+  reason: string;
+  createdAt: string;
+}
+
+function verdictOf(decision: string): "allowed" | "blocked" | "approval" | "other" {
+  if (decision === "allow" || decision === "approved") return "allowed";
+  if (decision === "deny" || decision === "denied" || decision === "blocked") return "blocked";
+  if (decision === "require_approval") return "approval";
+  return "other";
+}
+
+/** Newest-first sample of up to 8: the latest events, plus the newest
+ *  blocked / needs-approval event when the latest page is all one verdict. */
+function pickPolicySample(events: PolicyEvent[]): PolicyEvent[] {
+  const sorted = [...events].sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  const latest = sorted.slice(0, 8);
+  const have = new Set(latest.map((e) => verdictOf(e.decision)));
+  for (const want of ["blocked", "approval"] as const) {
+    if (!have.has(want)) {
+      const found = sorted.find((e) => verdictOf(e.decision) === want);
+      if (found) {
+        latest.push(found);
+        have.add(want);
+      }
+    }
+  }
+  return latest.slice(0, 10).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
 }
 
 interface ApprovalItem {
@@ -109,6 +144,7 @@ export function PersistentLiveActivity() {
   const [tasks, setTasks] = useState<MonitorTask[]>([]);
   const [events, setEvents] = useState<TraceEvent[]>([]);
   const [approvals, setApprovals] = useState<ApprovalItem[]>([]);
+  const [policyLog, setPolicyLog] = useState<PolicyEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [notice, setNotice] = useState<string | null>(null);
   const [loadError, setLoadError] = useState(false);
@@ -155,11 +191,15 @@ export function PersistentLiveActivity() {
 
   const refresh = useCallback(async () => {
     try {
-      const [taskRes, traceRes, apprRes] = await Promise.all([
+      const [taskRes, traceRes, apprRes, auditRes] = await Promise.all([
         fetch("/api/agent").then((r) => r.json()).catch(() => ({})),
         fetch("/api/traces/all").then((r) => r.json()).catch(() => ({})),
         fetch("/api/approvals").then((r) => r.json()).catch(() => ({})),
+        (warden
+          ? fetch("/api/audit?limit=200").then((r) => r.json()).catch(() => ({}))
+          : Promise.resolve({})),
       ]);
+      setPolicyLog(pickPolicySample((auditRes.events ?? []) as PolicyEvent[]));
       const fetchedTasks = (taskRes.tasks ?? []) as MonitorTask[];
       const traces = (traceRes.traces ?? []) as Array<{ taskId: string; events: TraceEvent[] }>;
       setTasks(fetchedTasks);
@@ -198,7 +238,7 @@ export function PersistentLiveActivity() {
     } finally {
       setLoading(false);
     }
-  }, [chromeConversationId]);
+  }, [chromeConversationId, warden]);
 
   useEffect(() => {
     void refresh();
@@ -480,7 +520,7 @@ export function PersistentLiveActivity() {
 
         <section className="shell-card" aria-label="Recent activity">
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <p className="shell-card-title">{warden ? "Policy log" : "Recent activity"}</p>
+            <p className="shell-card-title">Recent activity</p>
             <Link href="/history" style={{ fontSize: "var(--ds-text-13)", fontWeight: 600, color: "var(--ds-accent)", minHeight: 44, display: "inline-flex", alignItems: "center" }}>
               View all
             </Link>
@@ -539,6 +579,41 @@ export function PersistentLiveActivity() {
               This task is waiting for approval, but no pending approval request was found. The request may have expired or been resolved. Open the task to review.
             </p>
           </div>
+        ) : null}
+
+        {warden && policyLog.length > 0 ? (
+          <section className="shell-card" aria-label="Warden policy log">
+            <p className="shell-card-title">Policy log</p>
+            <ul className="shell-trace">
+              {policyLog.map((p) => {
+                const d = p.decision;
+                const verdict =
+                  d === "allow" || d === "approved"
+                    ? { label: "Allowed", Icon: Check, color: "var(--ds-green-700)" }
+                    : d === "deny" || d === "denied" || d === "blocked"
+                      ? { label: "Blocked", Icon: Ban, color: "var(--ds-red-700)" }
+                      : d === "require_approval"
+                        ? { label: "Needs approval", Icon: Clock, color: "var(--ds-amber-700)" }
+                        : { label: d.replace(/_/g, " "), Icon: Activity, color: "var(--ds-muted)" };
+                return (
+                  <li key={p.id} className="shell-trace-row">
+                    <span className="shell-trace-ic" style={{ color: verdict.color }} aria-hidden="true">
+                      <verdict.Icon size={12} />
+                    </span>
+                    <span style={{ minWidth: 0 }}>
+                      <span className="shell-trace-t">
+                        {verdict.label} · {p.tool ?? p.kind}
+                      </span>
+                      <span className="shell-trace-time" style={{ display: "block", overflowWrap: "break-word" }}>
+                        {p.policy} — {p.reason}
+                      </span>
+                      <span className="shell-trace-time">{relativeTime(p.createdAt) ?? "—"}</span>
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
         ) : null}
 
         {warden ? (
