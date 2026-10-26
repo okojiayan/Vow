@@ -127,7 +127,7 @@ export const MOBILE_NAV_LINKS = [
 ];
 
 function MobileNav() {
-  const { requestNewChat, drawerOpen, toggleDrawer } = useChrome();
+  const { requestNewChat, drawerOpen, toggleDrawer, pendingApprovals } = useChrome();
   const pathname = usePathname();
   return (
     <nav className="shell-mobilebar" aria-label="Primary">
@@ -143,9 +143,12 @@ function MobileNav() {
         <SquareCheckBig size={18} aria-hidden="true" />
         <span>Tasks</span>
       </Link>
-      <button type="button" onClick={toggleDrawer} aria-pressed={drawerOpen} aria-label={drawerOpen ? "Hide activity" : "Show activity"}>
+      <button type="button" onClick={toggleDrawer} aria-pressed={drawerOpen} aria-label={pendingApprovals > 0 ? `Activity, ${pendingApprovals} approval${pendingApprovals === 1 ? "" : "s"} pending` : drawerOpen ? "Hide activity" : "Show activity"} style={{ position: "relative" }}>
         <PanelRight size={18} aria-hidden="true" />
         <span>Activity</span>
+        {pendingApprovals > 0 ? (
+          <span aria-hidden="true" style={{ position: "absolute", top: 2, right: "50%", marginRight: -26, minWidth: 18, height: 18, padding: "0 5px", borderRadius: 9, background: "var(--ds-accent)", color: "var(--ds-accent-ink)", fontSize: 11, fontWeight: 700, lineHeight: "18px", textAlign: "center" }}>{pendingApprovals > 9 ? "9+" : pendingApprovals}</span>
+        ) : null}
       </button>
     </nav>
   );

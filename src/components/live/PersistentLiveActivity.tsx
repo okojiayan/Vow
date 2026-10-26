@@ -102,7 +102,7 @@ function clampWidth(n: number): number {
 
 export function PersistentLiveActivity() {
   const { warden, wardenBackend, wardenPending } = useMode();
-  const { drawerOpen, setDrawerOpen, toggleDrawer, conversationId: chromeConversationId } = useChrome();
+  const { drawerOpen, setDrawerOpen, toggleDrawer, conversationId: chromeConversationId, setPendingApprovals } = useChrome();
   const backend: WardenBackend =
     wardenBackend ?? (wardenPending ? { status: "pending" } : { status: "unknown", error: "not checked yet" });
   const wardenUi = wardenDisplay(warden, backend);
@@ -240,6 +240,9 @@ export function PersistentLiveActivity() {
   const isRealActiveTask = activeTask !== null;
   const isStaleDisplay = displayTask ? isStaleActiveTask(displayTask) : false;
   const displayApprovals = displayTask ? visibleApprovals.filter((a) => a.taskId === displayTask.id) : [];
+  useEffect(() => {
+    setPendingApprovals(approvals.length);
+  }, [approvals.length, setPendingApprovals]);
   const startedAt = (() => {
     try {
       const q = displayTask?.queuedAt;
@@ -308,20 +311,23 @@ export function PersistentLiveActivity() {
 
   // Collapsed strip when idle: a 44px rail, never a large empty panel.
   if (!drawerOpen) {
-    const dot = displayApprovals.length > 0 || isRealActiveTask;
+    const pending = approvals.length;
+    const dot = pending > 0 || isRealActiveTask;
     return (
       <div className="shell-activity-strip">
         <button
           type="button"
           className="shell-iconbtn"
           onClick={toggleDrawer}
-          aria-label="Show activity"
-          title="Show activity (⌘⇧M)"
+          aria-label={pending > 0 ? `Show activity, ${pending} approval${pending === 1 ? "" : "s"} pending` : "Show activity"}
+          title={pending > 0 ? `Show activity — ${pending} approval${pending === 1 ? "" : "s"} pending (⌘⇧M)` : "Show activity (⌘⇧M)"}
           aria-expanded={false}
           style={{ position: "relative" }}
         >
           <Activity size={18} aria-hidden="true" />
-          {dot ? (
+          {pending > 0 ? (
+            <span aria-hidden="true" style={{ position: "absolute", top: 2, right: 2, minWidth: 18, height: 18, padding: "0 5px", borderRadius: 9, background: "var(--ds-accent)", color: "var(--ds-accent-ink)", fontSize: 11, fontWeight: 700, lineHeight: "18px", textAlign: "center" }}>{pending > 9 ? "9+" : pending}</span>
+          ) : dot ? (
             <span aria-hidden="true" style={{ position: "absolute", top: 8, right: 8, width: 8, height: 8, borderRadius: "50%", background: "var(--ds-amber-700)" }} />
           ) : null}
         </button>
