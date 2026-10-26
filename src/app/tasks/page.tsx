@@ -139,6 +139,7 @@ export default function TasksPage() {
   const [toast, setToast] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [clearing, setClearing] = useState(false);
+  const [confirmClear, setConfirmClear] = useState(false);
 
   const refresh = useCallback(async () => {
     try {
@@ -204,6 +205,7 @@ export default function TasksPage() {
   const clearStale = useCallback(async () => {
     const stale = tasks.filter((t) => isStaleActiveTask(t));
     if (stale.length === 0) return;
+    setConfirmClear(false);
     setClearing(true);
     let done = 0;
     for (const t of stale) {
@@ -315,7 +317,7 @@ export default function TasksPage() {
               { value: "today", label: "Today" },
             ]}
           />
-          <Button variant="secondary" disabled={staleTasks.length === 0 || clearing} loading={clearing} onClick={() => void clearStale}>
+          <Button variant="secondary" disabled={staleTasks.length === 0 || clearing} loading={clearing} onClick={() => setConfirmClear(true)}>
             Clear stale{staleTasks.length > 0 ? ` (${staleTasks.length})` : ""}
           </Button>
         </div>
@@ -381,6 +383,25 @@ export default function TasksPage() {
             ]}
           />
         )}
+
+        <Dialog
+          title={staleTasks.length === 1 ? "Clear 1 stale task?" : `Clear ${staleTasks.length} stale tasks?`}
+          open={confirmClear}
+          onClose={() => setConfirmClear(false)}
+          actions={
+            <>
+              <Button variant="ghost" size="sm" onClick={() => setConfirmClear(false)}>Keep tasks</Button>
+              <Button variant="destructive" size="sm" loading={clearing} onClick={() => void clearStale()}>Clear stale</Button>
+            </>
+          }
+        >
+          <p style={{ margin: 0 }}>
+            {staleTasks.length === 1
+              ? "This task will be cancelled and removed from active views."
+              : `These ${staleTasks.length} tasks will be cancelled and removed from active views.`}{" "}
+            Cancelling archives them — no pending approval is granted and nothing executes. This cannot be undone.
+          </p>
+        </Dialog>
 
         <Dialog
           title={detail ? detail.request : "Task details"}

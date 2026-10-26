@@ -46,6 +46,7 @@ export default function MemoryPage() {
   const [editContent, setEditContent] = useState("");
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [undoBackup, setUndoBackup] = useState<RawRecord | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -91,15 +92,36 @@ export default function MemoryPage() {
   }, [flash, load, newContent, newKind, saving]);
 
   const handleDelete = useCallback(async (id: string) => {
+    const backup = records.find((r) => r.id === id) ?? null;
     try {
       const res = await fetch(`/api/memory/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Delete failed.");
       setRecords((prev) => prev.filter((r) => r.id !== id));
-      flash("Memory removed.");
+      setUndoBackup(backup);
+      setToast("Memory removed.");
+      window.setTimeout(() => { setToast(null); setUndoBackup(null); }, 8000);
     } catch {
       flash("Could not remove that memory.");
     }
-  }, [flash]);
+  }, [flash, records]);
+
+  const undoDelete = useCallback(async () => {
+    if (!undoBackup) return;
+    setUndoBackup(null);
+    setToast(null);
+    try {
+      const res = await fetch("/api/memory", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: undoBackup.content, kind: undoBackup.kind ?? "observation" }),
+      });
+      if (!res.ok) throw new Error("Undo failed.");
+      flash("Memory restored.");
+      await load();
+    } catch (err) {
+      flash(err instanceof Error ? err.message : "Could not restore that memory.");
+    }
+  }, [flash, load, undoBackup]);
 
   const startEdit = useCallback((r: RawRecord) => {
     setEditingId(r.id);
@@ -284,7 +306,7 @@ export default function MemoryPage() {
           </form>
         </Dialog>
 
-        {toast ? <Toast title={toast} /> : null}
+        {toast ? (undoBackup ? <Toast title={toast} action={{ label: "Undo", onPress: () => void undoDelete() }} /> : <Toast title={toast} />) : null}
       </div>
     </div>
   );
