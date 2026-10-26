@@ -180,9 +180,16 @@ export function PersistentLiveActivity() {
       setEvents(trace ? trace.events.slice(-6) : []);
 
       const pendingApprovals = ((apprRes.approvals ?? []) as ApprovalItem[]).filter((a) => a.status === "pending");
+      // Orphan guard: ignore approvals whose task is no longer active
+      // (cancelled, completed, failed, blocked). Approving an orphan resumes
+      // nothing — the backend routes continueTask to cancelNow — so surfacing
+      // it would promise an action that cannot happen.
+      const liveApprovals = pendingApprovals.filter((a) =>
+        fetchedTasks.some((t) => t.id === a.taskId && isActiveTaskStatus(t.status)),
+      );
       const activeApprovals = chromeConversationId
-        ? pendingApprovals.filter((a) => scoped.some((t) => t.id === a.taskId))
-        : (live ? pendingApprovals.filter((a) => a.taskId === live.id) : []);
+        ? liveApprovals.filter((a) => scoped.some((t) => t.id === a.taskId))
+        : (live ? liveApprovals.filter((a) => a.taskId === live.id) : []);
       setApprovals(activeApprovals);
       setLoadError(false);
     } catch {

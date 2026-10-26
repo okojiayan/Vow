@@ -37,23 +37,7 @@ interface RecentConversation {
   updatedAt?: string;
 }
 
-const CANONICAL_RECENT_NORMAL = [
-  { id: "c1", title: "AI Agent Research", time: "3 min ago", icon: MessageSquareText },
-  { id: "c2", title: "Website Ideas", time: "2 hours ago", icon: Sparkles },
-  { id: "c3", title: "Travel Plan for December", time: "1 day ago", icon: BarChart3 },
-  { id: "c4", title: "Organize My Files", time: "1 day ago", icon: FolderOpen },
-  { id: "c5", title: "Compare LLMs", time: "2 days ago", icon: LayoutGrid },
-  { id: "c6", title: "Robotics Event Plan", time: "3 days ago", icon: CalendarDays },
-];
 
-const CANONICAL_RECENT_WARDEN = [
-  { id: "cw1", title: "Protected task execution", time: "2 min ago", icon: ShieldCheck },
-  { id: "cw2", title: "Research on agent safety", time: "1 hour ago", icon: ShieldCheck },
-  { id: "cw3", title: "Compare LLM frameworks", time: "3 hours ago", icon: BarChart3 },
-  { id: "cw4", title: "Build evaluation report", time: "1 day ago", icon: FolderOpen },
-  { id: "cw5", title: "Organize project files", time: "2 days ago", icon: LayoutGrid },
-  { id: "cw6", title: "Robotics event plan", time: "2 days ago", icon: CalendarDays },
-];
 
 function titleFor(c: RecentConversation): string {
   const m = c.messages.find((x) => x.role === "user") ?? c.messages[0];
@@ -118,20 +102,13 @@ export function Sidebar({ rail = false }: { rail?: boolean }) {
   }, [setSidebarOpen, requestNewChat]);
 
   const go = (href: string) => { setMenuOpen(false); if (typeof window !== "undefined" && window.innerWidth < 1024) setSidebarOpen(false); router.push(href); };
-  // Placeholder recents are a dev-only visual fallback: Next.js inlines
-  // NODE_ENV, so production bundles drop the canonical list and show real
-  // conversations (or an honest empty state) instead of mock titles.
-  const allowPlaceholderRecents = process.env.NODE_ENV !== "production";
   // Order policy: most recently active conversations first, so security-test
   // commands and other older history never outrank current work. History
   // itself is never modified or hidden by this ordering.
-  const canonicalList = warden ? CANONICAL_RECENT_WARDEN : CANONICAL_RECENT_NORMAL;
-  const liveRecents = (recents ?? []).slice(0, 8);
-  const recentSource = liveRecents.length > 0
-    ? liveRecents
-    : (allowPlaceholderRecents ? canonicalList : []);
+  // No seed titles: with no real conversations the list is honestly empty.
+  const recentSource = (recents ?? []).slice(0, 8);
   const filteredRecents = searchQuery.trim()
-    ? recentSource.filter((c) => ("title" in c ? c.title : titleFor(c as RecentConversation)).toLowerCase().includes(searchQuery.toLowerCase()))
+    ? recentSource.filter((c) => titleFor(c).toLowerCase().includes(searchQuery.toLowerCase()))
     : recentSource;
   const visible = showAll ? filteredRecents : filteredRecents.slice(0, 6);
   const loaded = recents !== null;
@@ -240,9 +217,9 @@ export function Sidebar({ rail = false }: { rail?: boolean }) {
         ) : (
           <ul className="shell-recent-list">
             {visible.map((c) => {
-              const Icon = ("icon" in c ? c.icon : iconFor(c as RecentConversation)) as typeof MessageSquareText;
-              const time = "time" in c ? c.time : relativeTime((c as RecentConversation).updatedAt ?? latestMessageTime((c as RecentConversation).messages));
-              const title = "title" in c ? c.title : titleFor(c as RecentConversation);
+              const Icon = iconFor(c);
+              const time = relativeTime(c.updatedAt ?? latestMessageTime(c.messages));
+              const title = titleFor(c);
               return (
                 <li key={c.id}>
                   <Link href={`/?convo=${c.id}`} onClick={() => setSidebarOpen(false)} className="shell-recent" title={title}>

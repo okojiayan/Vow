@@ -6,6 +6,7 @@ import { Check, Copy, Plus } from "lucide-react";
 import {
   ACTIVE_TASK_STATUSES,
   dedupeOutcomeBlocks,
+  isActiveTaskStatus,
   formatOutcome,
   isStaleActiveTask,
   taskCardState,
@@ -457,7 +458,7 @@ export default function TasksPage() {
                 <section aria-label="Approvals" style={{ display: "grid", gap: "var(--ds-space-3)" }}>
                   <h3 style={{ fontSize: "var(--ds-text-13)", fontWeight: 600, color: "var(--ds-muted)", textTransform: "uppercase", letterSpacing: "0.05em", margin: 0 }}>Approvals</h3>
                   {detailApprovals.map((a) => (
-                    a.status === "pending" ? (
+                    a.status === "pending" && detail && isActiveTaskStatus(detail.status) ? (
                       <ApprovalCard
                         key={a.id}
                         title={`${a.tool} access request`}

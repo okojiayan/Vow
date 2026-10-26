@@ -1,4 +1,7 @@
 import type { PermissionLevel } from "@/components/ui/badges";
+import type { BackendMode } from "@/lib/autonomy";
+
+export type PolicyEffectMirror = "allow" | "deny" | "require_approval";
 
 /**
  * Static, hand-maintained mirror of the server-side registry for display only.
@@ -14,22 +17,29 @@ export interface RuntimeTool {
   purpose: string;
   permission: PermissionLevel;
   wardenNote: string;
+  /**
+   * Per-mode Warden effect, mirrored from TOOL_PERMISSIONS in
+   * src/core/warden/policy.ts (supervised falls back to `default`, exactly
+   * like effectForMode). Covered by tests/unit/runtime-inventory.test.ts —
+   * any drift fails the build.
+   */
+  effects: { default: PolicyEffectMirror; assisted: PolicyEffectMirror; autonomous: PolicyEffectMirror };
 }
 
 export const BUILTIN_TOOLS: RuntimeTool[] = [
-  { name: "fs.list", purpose: "List files in the workspace.", permission: "read", wardenNote: "Allowed reads run without approval." },
-  { name: "fs.read", purpose: "Read a workspace file.", permission: "read", wardenNote: "Allowed reads run without approval." },
-  { name: "memory.search", purpose: "Search saved memory.", permission: "read", wardenNote: "Allowed reads run without approval." },
-  { name: "calc.evaluate", purpose: "Evaluate one bounded expression with the safe parser.", permission: "read", wardenNote: "Allowed reads run without approval." },
-  { name: "run_sql", purpose: "Run one restricted read-only query on the approved view.", permission: "read", wardenNote: "Read-only by restriction; anything else is denied." },
-  { name: "plugin.text-stats.analyze", purpose: "Count characters, words, lines, and reading time.", permission: "read", wardenNote: "Allowed reads run without approval." },
-  { name: "fs.write", purpose: "Write a file inside the workspace.", permission: "write", wardenNote: "Needs approval for writes." },
-  { name: "notes.create", purpose: "Create a markdown note in workspace notes.", permission: "write", wardenNote: "Needs approval for writes." },
-  { name: "memory.store", purpose: "Save an observed memory with provenance.", permission: "write", wardenNote: "Needs approval for writes." },
-  { name: "subagent.spawn", purpose: "Delegate a scoped subtask to a child agent.", permission: "write", wardenNote: "Needs approval; the child gets an explicit tool allowlist." },
-  { name: "fs.delete", purpose: "Delete a workspace file.", permission: "write", wardenNote: "Deny-by-default; needs explicit Warden approval." },
-  { name: "http.fetch", purpose: "Fetch a URL.", permission: "read-append", wardenNote: "Deny-by-default; requests are denied unless allowed." },
-  { name: "shell.exec", purpose: "Run a shell command.", permission: "write", wardenNote: "Permanently denied by policy." },
+  { name: "fs.list", purpose: "List files in the workspace.", permission: "read", wardenNote: "Allowed reads run without approval.", effects: { default: "allow", assisted: "allow", autonomous: "allow" } },
+  { name: "fs.read", purpose: "Read a workspace file.", permission: "read", wardenNote: "Allowed reads run without approval.", effects: { default: "allow", assisted: "allow", autonomous: "allow" } },
+  { name: "memory.search", purpose: "Search saved memory.", permission: "read", wardenNote: "Allowed reads run without approval.", effects: { default: "allow", assisted: "allow", autonomous: "allow" } },
+  { name: "calc.evaluate", purpose: "Evaluate one bounded expression with the safe parser.", permission: "read", wardenNote: "Allowed reads run without approval.", effects: { default: "allow", assisted: "allow", autonomous: "allow" } },
+  { name: "run_sql", purpose: "Run one restricted read-only query on the approved view.", permission: "read", wardenNote: "Read-only by restriction; anything else is denied.", effects: { default: "allow", assisted: "allow", autonomous: "allow" } },
+  { name: "plugin.text-stats.analyze", purpose: "Count characters, words, lines, and reading time.", permission: "read", wardenNote: "Allowed reads run without approval.", effects: { default: "require_approval", assisted: "require_approval", autonomous: "allow" } },
+  { name: "fs.write", purpose: "Write a file inside the workspace.", permission: "write", wardenNote: "Needs approval for writes.", effects: { default: "require_approval", assisted: "require_approval", autonomous: "allow" } },
+  { name: "notes.create", purpose: "Create a markdown note in workspace notes.", permission: "write", wardenNote: "Needs approval for writes.", effects: { default: "require_approval", assisted: "require_approval", autonomous: "allow" } },
+  { name: "memory.store", purpose: "Save an observed memory with provenance.", permission: "write", wardenNote: "Needs approval for writes.", effects: { default: "allow", assisted: "allow", autonomous: "allow" } },
+  { name: "subagent.spawn", purpose: "Delegate a scoped subtask to a child agent.", permission: "write", wardenNote: "Needs approval; the child gets an explicit tool allowlist.", effects: { default: "require_approval", assisted: "require_approval", autonomous: "allow" } },
+  { name: "fs.delete", purpose: "Delete a workspace file.", permission: "write", wardenNote: "Deny-by-default; needs explicit Warden approval.", effects: { default: "deny", assisted: "deny", autonomous: "require_approval" } },
+  { name: "http.fetch", purpose: "Fetch a URL.", permission: "read-append", wardenNote: "Deny-by-default; requests are denied unless allowed.", effects: { default: "deny", assisted: "deny", autonomous: "require_approval" } },
+  { name: "shell.exec", purpose: "Run a shell command.", permission: "write", wardenNote: "Permanently denied by policy.", effects: { default: "deny", assisted: "deny", autonomous: "deny" } },
 ];
 
 export function toolByName(name: string): RuntimeTool | undefined {
@@ -150,3 +160,10 @@ export const SKILLS: SkillEntry[] = [
     limits: "Read-only listing inside the workspace boundary; file contents are not read.",
   },
 ];
+
+/** Mirror of effectForMode(): supervised resolves to the default effect. */
+export function effectForMode(tool: RuntimeTool, mode: BackendMode): PolicyEffectMirror {
+  if (mode === "autonomous") return tool.effects.autonomous;
+  if (mode === "assisted") return tool.effects.assisted;
+  return tool.effects.default;
+}

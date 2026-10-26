@@ -10,7 +10,9 @@ import { Field, Input, Select, Checkbox, Switch } from "@/components/ui/fields";
 import { Menu, Dialog, Drawer, Toast } from "@/components/ui/overlays";
 import { EmptyState } from "@/components/ui/feedback";
 import { PermissionBadge } from "@/components/ui/badges";
-import { BUILTIN_TOOLS } from "@/lib/runtime-inventory";
+import { BUILTIN_TOOLS, effectForMode } from "@/lib/runtime-inventory";
+import { backendModeFor, optionFor } from "@/lib/autonomy";
+import { useMode } from "@/components/shell/ModeContext";
 
 interface Routine {
   id: string;
@@ -47,14 +49,52 @@ function needsApproval(r: Routine): boolean {
   return r.tools.some((name) => BUILTIN_TOOLS.find((t) => t.name === name)?.permission !== "read");
 }
 
-function preview(kind: Routine["kind"], time: string, branch: string, tools: string[]): string {
+/** Row-level policy line, derived from the same per-tool effects as the preview. */
+function rowPolicy(r: Routine, backendMode: ReturnType<typeof backendModeFor>, modeLabel: string): string {
+  if (r.tools.length === 0) return " · no tools selected";
+  const effects = r.tools.map((name) => {
+    const def = BUILTIN_TOOLS.find((t) => t.name === name);
+    return def ? effectForMode(def, backendMode) : "allow";
+  });
+  if (effects.includes("deny")) return ` · blocked by policy in ${modeLabel}`;
+  if (effects.includes("require_approval")) return ` · Warden approval required for writes in ${modeLabel}`;
+  return " · reads only";
+}
+
+function preview(kind: Routine["kind"], time: string, branch: string, tools: string[], backendMode?: string, modeLabel?: string): string {
   const r: Routine = { id: "", name: "", kind, time, branch, tools, enabled: true, createdAt: "" };
-  return `${describeSchedule(r)}. ${needsApproval(r) ? "Needs approval for writes." : "Reads only; runs without approval."}`;
+  const verdict = tools.length === 0
+    ? "No tools selected, so a run would do nothing."
+    : needsApproval(r)
+      ? `Needs approval for writes in ${modeLabel ?? "this mode"} (${backendMode ?? "assisted"} policy).`
+      : "Reads only; runs without approval.";
+  return `${describeSchedule(r)}. ${verdict}`;
+}
+
+/** Shows the derivation: each selected tool with its real per-mode effect. */
+function Derivation({ tools, backendMode, modeLabel }: { tools: string[]; backendMode: ReturnType<typeof backendModeFor>; modeLabel: string }) {
+  if (tools.length === 0) return null;
+  return (
+    <ul aria-label="Policy derivation" style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: "var(--ds-space-1)" }}>
+      {tools.map((name) => {
+        const def = BUILTIN_TOOLS.find((t) => t.name === name);
+        if (!def) return null;
+        return (
+          <li key={name} style={{ fontSize: "var(--ds-text-13)", color: "var(--ds-muted)", fontFamily: "var(--ds-font-mono)" }}>
+            {name} → {effectForMode(def, backendMode)} in {modeLabel}
+          </li>
+        );
+      })}
+    </ul>
+  );
 }
 
 export default function RoutinesPage() {
   const { effective } = useTheme();
+  const { uiMode } = useMode();
   const router = useRouter();
+  const backendMode = backendModeFor(uiMode);
+  const modeLabel = optionFor(uiMode).label;
   const [routines, setRoutines] = useState<Routine[]>([]);
   const [toast, setToast] = useState<string | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -144,7 +184,7 @@ export default function RoutinesPage() {
       const res = await fetch("/api/agent/enqueue", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ message: `Routine "${r.name}": ${describeSchedule(r)}. Permitted tools: ${r.tools.join(", ") || "none"}.` }),
+        body: JSON.stringify({ message: `Routine "${r.name}": ${describeSchedule(r)}. Permitted tools: ${r.tools.join(", ") || "none"}.`, autonomyMode: backendMode }),
       });
       if (!res.ok) throw new Error("Could not start the routine.");
       flash("Routine started — follow it in Tasks.");
@@ -154,7 +194,7 @@ export default function RoutinesPage() {
     } finally {
       setRunningId(null);
     }
-  }, [flash, router]);
+  }, [backendMode, flash, router]);
 
   const toggleTool = useCallback((tool: string) => {
     setTools((prev) => (prev.includes(tool) ? prev.filter((t) => t !== tool) : [...prev, tool]));
@@ -197,7 +237,7 @@ export default function RoutinesPage() {
                     <p style={{ margin: "4px 0 0", fontSize: "var(--ds-text-13)", color: "var(--ds-muted)" }}>{describeSchedule(r)}</p>
                     <p style={{ margin: "4px 0 0", fontSize: "var(--ds-text-13)", color: "var(--ds-muted)" }}>
                       Last run: <span>Not run yet</span>
-                      {needsApproval(r) ? " · Warden approval required for writes" : " · reads only"}
+                      {rowPolicy(r, backendMode, modeLabel)}
                     </p>
                     <div style={{ display: "flex", gap: "var(--ds-space-2)", flexWrap: "wrap", marginTop: "var(--ds-space-2)" }}>
                       {r.tools.map((t) => {
@@ -258,8 +298,9 @@ export default function RoutinesPage() {
               </div>
             </fieldset>
             <p role="status" style={{ margin: 0, fontSize: "var(--ds-text-13)", color: "var(--ds-muted)", border: "1px solid var(--ds-border)", borderRadius: "var(--ds-radius-md)", padding: "10px 14px", background: "var(--ds-bg)" }}>
-              {preview(kind, time, branch, tools)}
+              {preview(kind, time, branch, tools, backendMode, modeLabel)}
             </p>
+            <Derivation tools={tools} backendMode={backendMode} modeLabel={modeLabel} />
             <div style={{ display: "flex", gap: "var(--ds-space-2)", justifyContent: "flex-end" }}>
               <Button variant="ghost" size="sm" onClick={() => setDrawerOpen(false)}>Cancel</Button>
               <Button variant="primary" size="sm" disabled={!name.trim()} onClick={save}>{editingId ? "Save changes" : "Create routine"}</Button>

@@ -90,14 +90,6 @@ export default function IntegrationsPage() {
     setWizardOpen(true);
   }, []);
 
-  const connect = useCallback(() => {
-    setConfigs((prev) => ({
-      ...prev,
-      [connectorId]: { method, scopes, requireApproval, configuredAt: new Date().toISOString() },
-    }));
-    setWizardOpen(false);
-    flash(`${connector.name} connected on this device.`);
-  }, [connector.name, connectorId, flash, method, requireApproval, scopes]);
 
   const confirmDisconnect = useCallback(() => {
     if (!disconnectId) return;
@@ -193,7 +185,7 @@ export default function IntegrationsPage() {
                         <RowBody
                           name={c.name}
                           purpose={c.purpose}
-                          meta={cfg ? `Configured on this device · ${relativeTime(cfg.configuredAt) ?? "recently"}` : undefined}
+                          meta={cfg ? `Saved on this device · preview only, not a live connection` : undefined}
                           permission={c.permission}
                           scopes={c.scopes}
                           connected
@@ -307,12 +299,17 @@ export default function IntegrationsPage() {
               </div>
             ) : null}
 
+            {step === 3 ? (
+              <p role="note" style={{ margin: 0, fontSize: "var(--ds-text-13)", color: "var(--ds-muted)", border: "1px solid var(--ds-border)", borderRadius: "var(--ds-radius-md)", padding: "10px 14px", background: "var(--ds-bg)" }}>
+                Live connections are not yet available in this build, so this review is a preview of what connecting would request. Nothing is sent anywhere.
+              </p>
+            ) : null}
             <div style={{ display: "flex", gap: "var(--ds-space-2)", justifyContent: "space-between" }}>
               <Button variant="ghost" size="sm" disabled={step === 0} onClick={() => setStep((s) => Math.max(0, s - 1))}>Back</Button>
               {step < 3 ? (
                 <Button variant="secondary" size="sm" onClick={() => setStep((s) => Math.min(3, s + 1))}>Continue</Button>
               ) : (
-                <Button variant="primary" size="sm" onClick={connect}>Connect {connector.name}</Button>
+                <Button variant="secondary" size="sm" disabled title="Live connections are not yet available">Not yet available</Button>
               )}
             </div>
           </div>
