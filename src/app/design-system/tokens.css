@@ -1,0 +1,112 @@
+/* VOW design tokens — Stage 2 foundations. Self-scoped: .ds-scope only.
+   Light = default. Dark = prefers-color-scheme. Warden = body.warden. */
+.ds-scope {
+  --ds-font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --ds-font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
+
+  /* Brand anchor — sampled from the VOW mascot: near-black body plumage,
+     warm-white eye glow. Neutrals descend from the body; the glow tints
+     accent washes so the palette belongs to the character. */
+  --ds-mascot-body: #1A151F;
+  --ds-mascot-glow: #F6F0DC;
+
+  --ds-text-12: 12px; --ds-text-13: 13px; --ds-text-14: 14px;
+  --ds-text-16: 16px; --ds-text-20: 20px; --ds-text-28: 28px;
+
+  --ds-space-1: 4px; --ds-space-2: 8px; --ds-space-3: 12px;
+  --ds-space-4: 16px; --ds-space-6: 24px; --ds-space-8: 32px;
+  --ds-space-12: 48px; --ds-space-16: 64px;
+
+  --ds-radius-sm: 6px; --ds-radius-md: 8px; --ds-radius-lg: 12px;
+  --ds-radius-pill: 999px;
+
+  --ds-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ds-dur-1: 120ms; --ds-dur-2: 160ms; --ds-dur-3: 200ms; --ds-dur-panel: 240ms;
+
+  --ds-bg: #FAFAF9; --ds-surface: #FFFFFF; --ds-surface-2: #F5F0E8;
+  --ds-border: #E7E5E4; --ds-border-strong: #767676;
+  --ds-ink: #1C1917; --ds-ink-soft: #44403C; --ds-muted: #57534E;
+
+  --ds-bronze-050: #FBF6EC; --ds-bronze-100: #F6EAD2; --ds-bronze-200: #ECD3A6;
+  --ds-bronze-500: #B45309; --ds-bronze-700: #92400E; --ds-bronze-900: #78350F;
+  --ds-accent: #92400E; --ds-accent-ink: #FFFFFF; --ds-accent-wash: #FEF3C7;
+
+  --ds-green-700: #166534; --ds-green-wash: #DCFCE7;
+  --ds-red-700: #B91C1C; --ds-red-wash: #FEE2E2;
+  --ds-blue-700: #1E40AF; --ds-blue-wash: #DBEAFE;
+  --ds-amber-700: #92400E; --ds-amber-wash: #FEF3C7;
+
+  --ds-elev-0: none;
+  --ds-scrim: rgba(28, 25, 23, 0.45);
+  --ds-elev-1: 0 1px 2px rgba(28, 25, 23, 0.08), 0 1px 3px rgba(28, 25, 23, 0.06);
+  --ds-elev-2: 0 8px 24px -12px rgba(28, 25, 23, 0.22);
+}
+/* System mode follows the OS; an explicit data-theme always wins. */
+@media (prefers-color-scheme: dark) {
+  .ds-scope:not([data-theme="light"]):not([data-theme="dark"]):not([data-theme="warden"]) {
+    --ds-scrim: rgba(10, 8, 6, 0.6);
+    --ds-bg: #1A151F; /* mascot body — dark surfaces are the character's plumage */ --ds-surface: #292524; --ds-surface-2: #292524;
+    --ds-border: #44403C; --ds-border-strong: #8A8580;
+    --ds-ink: #FAFAF9; --ds-ink-soft: #E7E5E4; --ds-muted: #A8A29E;
+    --ds-accent: #E9B45B; --ds-accent-ink: #1C1917; --ds-accent-wash: #44403C;
+    --ds-bronze-050: #292524; --ds-bronze-100: #44403C;
+    --ds-green-700: #86EFAC; --ds-green-wash: #14532D;
+    --ds-red-700: #FCA5A5; --ds-red-wash: #7F1D1D;
+    --ds-blue-700: #93C5FD; --ds-blue-wash: #1E3A8A;
+    --ds-amber-700: #FCD34D; --ds-amber-wash: #78350F;
+    --ds-elev-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --ds-elev-2: 0 12px 32px -12px rgba(0, 0, 0, 0.55);
+  }
+}
+body.warden .ds-scope {
+  --ds-bg: #101018; --ds-surface: #1A1A26; --ds-surface-2: #232333;
+  --ds-border: #3B3B54; --ds-border-strong: #7E7E9C;
+  --ds-ink: #ECECF5; --ds-ink-soft: #C9C9D8; --ds-muted: #A3A3BC;
+  --ds-accent: #D2A94F; --ds-accent-ink: #101018; --ds-accent-wash: #2C2C3E;
+  --ds-bronze-050: #232333; --ds-bronze-100: #3B3B54;
+  --ds-green-700: #93D3A4; --ds-green-wash: #1E3329;
+  --ds-red-700: #DC9C9C; --ds-red-wash: #3C2328;
+  --ds-blue-700: #A3AEDD; --ds-blue-wash: #232B45;
+  --ds-amber-700: #D2A94F; --ds-amber-wash: #2C2C3E;
+  --ds-elev-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --ds-elev-2: 0 12px 32px -12px rgba(0, 0, 0, 0.5);
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-scope *, .ds-scope *::before, .ds-scope *::after {
+    animation-duration: 0.01ms !important; transition-duration: 0.01ms !important;
+  }
+}
+.ds-scope {
+  font-family: var(--ds-font-sans);
+  background: var(--ds-bg); color: var(--ds-ink);
+}
+
+/* Explicit theme overrides for the showcase theme switch. */
+.ds-scope[data-theme="dark"] {
+  --ds-scrim: rgba(10, 8, 6, 0.6);
+  --ds-bg: #1A151F; /* mascot body — dark surfaces are the character's plumage */ --ds-surface: #292524; --ds-surface-2: #292524;
+  --ds-border: #44403C; --ds-border-strong: #8A8580;
+  --ds-ink: #FAFAF9; --ds-ink-soft: #E7E5E4; --ds-muted: #A8A29E;
+  --ds-accent: #E9B45B; --ds-accent-ink: #1C1917; --ds-accent-wash: #44403C;
+  --ds-bronze-050: #292524; --ds-bronze-100: #44403C;
+  --ds-green-700: #86EFAC; --ds-green-wash: #14532D;
+  --ds-red-700: #FCA5A5; --ds-red-wash: #7F1D1D;
+  --ds-blue-700: #93C5FD; --ds-blue-wash: #1E3A8A;
+  --ds-amber-700: #FCD34D; --ds-amber-wash: #78350F;
+  --ds-elev-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --ds-elev-2: 0 12px 32px -12px rgba(0, 0, 0, 0.55);
+}
+.ds-scope[data-theme="warden"] {
+  --ds-scrim: rgba(8, 8, 14, 0.62);
+  --ds-bg: #101018; --ds-surface: #1A1A26; --ds-surface-2: #232333;
+  --ds-border: #3B3B54; --ds-border-strong: #7E7E9C;
+  --ds-ink: #ECECF5; --ds-ink-soft: #C9C9D8; --ds-muted: #A3A3BC;
+  --ds-accent: #D2A94F; --ds-accent-ink: #101018; --ds-accent-wash: #2C2C3E;
+  --ds-bronze-050: #232333; --ds-bronze-100: #3B3B54;
+  --ds-green-700: #93D3A4; --ds-green-wash: #1E3329;
+  --ds-red-700: #DC9C9C; --ds-red-wash: #3C2328;
+  --ds-blue-700: #A3AEDD; --ds-blue-wash: #232B45;
+  --ds-amber-700: #D2A94F; --ds-amber-wash: #2C2C3E;
+  --ds-elev-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --ds-elev-2: 0 12px 32px -12px rgba(0, 0, 0, 0.5);
+}
