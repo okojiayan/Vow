@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/assets/vow/app-icon.png" alt="VOW mascot app icon" width="180" />
+</p>
+
 # VOW — Reliable. Correct. Fast.
 
 > A model-agnostic AI-agent reliability harness. VOW turns a request into an
