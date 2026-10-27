@@ -1,0 +1,30 @@
+
+ RUN  v3.2.7 /Users/ayan/Vow-repo
+
+ ❯ tests/evals/nemotron-vs-full-100.test.ts (1 test | 1 failed) 7497201ms
+   × nemotron vs full-system benchmark (matched cases) > runs matched benchmark, scores deterministically, writes artifacts 7497200ms
+     → Test timed out in 7200000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/evals/nemotron-vs-full-100.test.ts > nemotron vs full-system benchmark (matched cases) > runs matched benchmark, scores deterministically, writes artifacts
+Error: Test timed out in 7200000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/evals/nemotron-vs-full-100.test.ts:342:3
+    340| 
+    341| describe("nemotron vs full-system benchmark (matched cases)", () => {
+    342|   it("runs matched benchmark, scores deterministically, writes artifac…
+       |   ^
+    343|     const smokeOnly = process.env.SMOKE === "1";
+    344|     const t0All = Date.now();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  23:53:24
+   Duration  7500.61s (transform 520.85s, setup 0ms, collect 1.40s, tests 7497.20s, environment 0ms, prepare 145ms)
+
+EXIT:0

@@ -1,0 +1,370 @@
+2026-10-26T07:35:57.067Z outdir status=fresh priorManifest=none priorRun=none
+2026-10-26T07:35:57.068Z run identity runId=run-1793000157068-2.0.0 batches=1
+2026-10-26T07:35:57.068Z staged config batchIndex=0 batchSize=10 cooldownMs=0 cbThreshold=6
+2026-10-26T07:35:57.069Z fresh stability gate ok for nvidia/nemotron-3-ultra-550b-a55b; gate budget 120000ms is at least as strict as the benchmark per-model-call budget 120000ms
+2026-10-26T07:37:43.564Z preflight models attempt 1: status 200 count 59
+2026-10-26T07:37:43.565Z probe reachable=true detail=Meterless /models responded. model=nvidia/nemotron-3-ultra-550b-a55b models=59 modelTimeoutMs=120000 taskDeadlineMs=360000
+2026-10-26T07:37:43.573Z bench tier selection tier=easy count=100
+2026-10-26T07:37:43.574Z staged batch index=0 size=10 cases=R01,R02,R03,R04,R05,R06,R07,R08,R09,R10
+2026-10-26T07:37:43.580Z seeded 0 memory records for 10 selected cases; memBefore=190
+2026-10-26T07:39:13.803Z A R01 ok=true pass=true wallMs=90220 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:40:13.942Z A R02 ok=true pass=true wallMs=59835 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:41:14.121Z A R03 ok=true pass=true wallMs=59876 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:42:14.267Z A R04 ok=true pass=true wallMs=59843 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:43:14.437Z A R05 ok=true pass=true wallMs=59867 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:44:14.601Z A R06 ok=true pass=true wallMs=59861 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:45:14.748Z A R07 ok=true pass=true wallMs=59843 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:46:14.900Z A R08 ok=true pass=true wallMs=59849 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:47:15.061Z A R09 ok=true pass=true wallMs=59858 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:48:15.454Z A R10 ok=true pass=false wallMs=60085 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:48:16.872Z B R01 ok=true pass=true wallMs=1098 status=completed outcome=completed tools=calc.evaluate path=deterministic-tool err=
+2026-10-26T07:48:17.926Z B R02 ok=true pass=true wallMs=744 status=completed outcome=completed tools=calc.evaluate path=deterministic-tool err=
+2026-10-26T07:48:19.163Z B R03 ok=true pass=true wallMs=926 status=completed outcome=completed tools=calc.evaluate path=deterministic-tool err=
+2026-10-26T07:48:20.274Z B R04 ok=true pass=true wallMs=800 status=completed outcome=completed tools=calc.evaluate path=deterministic-tool err=
+2026-10-26T07:48:21.354Z B R05 ok=true pass=true wallMs=770 status=completed outcome=completed tools=calc.evaluate path=deterministic-tool err=
+2026-10-26T07:48:22.442Z B R06 ok=true pass=true wallMs=778 status=completed outcome=completed tools=calc.evaluate path=deterministic-tool err=
+2026-10-26T07:48:23.546Z B R07 ok=true pass=true wallMs=790 status=completed outcome=completed tools=calc.evaluate path=deterministic-tool err=
+2026-10-26T07:48:24.727Z B R08 ok=true pass=true wallMs=870 status=completed outcome=completed tools=calc.evaluate path=deterministic-tool err=
+2026-10-26T07:48:25.890Z B R09 ok=true pass=true wallMs=853 status=completed outcome=completed tools=calc.evaluate path=deterministic-tool err=
+2026-10-26T07:48:27.158Z B R10 ok=true pass=true wallMs=957 status=completed outcome=completed tools=calc.evaluate|calc.evaluate path=deterministic-tool err=
+2026-10-26T07:48:27.461Z retry pass done count=0
+2026-10-26T07:48:27.467Z cleanup removed=10 settings-restored=autonomous
+2026-10-26T07:48:27.468Z provenance modeA={"provider-analysis":10} modeB={"deterministic-tool":10}
+2026-10-26T07:48:27.468Z provenance-metrics modeA={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":9,"taskPassRatePct":90,"modelBackedPass":9,"modelBackedRatePct":90,"modelBackedEligibleRatePct":90,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":1} modeB={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":10,"taskPassRatePct":100,"modelBackedPass":0,"modelBackedRatePct":0,"modelBackedEligibleRatePct":0,"deterministicToolPass":10,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":0}
+2026-10-26T07:52:32.958Z outdir status=compatible-resume priorManifest=2.0.0 priorRun=run-1793000157068-2.0.0
+2026-10-26T07:52:32.959Z run identity runId=run-1793000157068-2.0.0 batches=2
+2026-10-26T07:52:32.959Z staged config batchIndex=1 batchSize=10 cooldownMs=0 cbThreshold=6
+2026-10-26T07:52:32.960Z fresh stability gate ok for nvidia/nemotron-3-ultra-550b-a55b; gate budget 120000ms is at least as strict as the benchmark per-model-call budget 120000ms
+2026-10-26T07:53:46.053Z preflight models attempt 1: status 200 count 59
+2026-10-26T07:53:46.054Z probe reachable=true detail=Meterless /models responded. model=nvidia/nemotron-3-ultra-550b-a55b models=59 modelTimeoutMs=120000 taskDeadlineMs=360000
+2026-10-26T07:53:46.061Z bench tier selection tier=easy count=100
+2026-10-26T07:53:46.061Z staged batch index=1 size=10 cases=R11,R12,R13,R14,R15,R16,R17,R18,R19,R20
+2026-10-26T07:53:46.067Z seeded 0 memory records for 10 selected cases; memBefore=190
+2026-10-26T07:53:46.069Z A resume quarantined 10: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T07:53:46.069Z A resume preserving 10 record(s) from other batches
+2026-10-26T07:55:31.247Z A R11 ok=true pass=true wallMs=105175 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:56:31.392Z A R12 ok=true pass=true wallMs=59841 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:57:46.583Z A R13 ok=true pass=true wallMs=74888 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:58:46.740Z A R14 ok=true pass=true wallMs=59853 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T07:59:47.723Z A R15 ok=true pass=true wallMs=60678 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:00:48.013Z A R16 ok=true pass=true wallMs=59983 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:02:03.276Z A R17 ok=true pass=true wallMs=74957 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:03:03.537Z A R18 ok=true pass=true wallMs=59959 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:04:03.806Z A R19 ok=true pass=false wallMs=59967 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:05:34.071Z A R20 ok=true pass=true wallMs=89962 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:05:34.373Z B resume quarantined 10: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T08:05:34.374Z B resume preserving 10 record(s) from other batches
+2026-10-26T08:07:34.858Z B R11 ok=true pass=true wallMs=120467 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:09:50.538Z B R12 ok=true pass=true wallMs=135365 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:11:51.047Z B R13 ok=true pass=true wallMs=120175 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:13:51.509Z B R14 ok=true pass=true wallMs=120147 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:16:06.897Z B R15 ok=true pass=true wallMs=135077 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:16:08.365Z B R16 ok=true pass=false wallMs=1157 status=completed outcome=completed tools=calc.evaluate path=deterministic-tool err=
+2026-10-26T08:16:09.446Z B R17 ok=true pass=true wallMs=770 status=completed outcome=completed tools=calc.evaluate path=deterministic-tool err=
+2026-10-26T08:18:07.324Z B R18 ok=true pass=true wallMs=117566 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:18:08.754Z B R19 ok=true pass=false wallMs=1115 status=completed outcome=completed tools=calc.evaluate path=deterministic-tool err=
+2026-10-26T08:18:09.902Z B R20 ok=true pass=true wallMs=837 status=completed outcome=completed tools=calc.evaluate path=deterministic-tool err=
+2026-10-26T08:18:10.204Z retry pass done count=0
+2026-10-26T08:18:10.209Z cleanup removed=10 settings-restored=autonomous
+2026-10-26T08:18:10.209Z provenance modeA={"provider-analysis":10} modeB={"provider-analysis":6,"deterministic-tool":4}
+2026-10-26T08:18:10.209Z provenance-metrics modeA={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":9,"taskPassRatePct":90,"modelBackedPass":9,"modelBackedRatePct":90,"modelBackedEligibleRatePct":90,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":1} modeB={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":8,"taskPassRatePct":80,"modelBackedPass":6,"modelBackedRatePct":60,"modelBackedEligibleRatePct":60,"deterministicToolPass":2,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":2}
+2026-10-26T08:23:01.935Z outdir status=compatible-resume priorManifest=2.0.0 priorRun=run-1793000157068-2.0.0
+2026-10-26T08:23:01.936Z run identity runId=run-1793000157068-2.0.0 batches=3
+2026-10-26T08:23:01.936Z staged config batchIndex=2 batchSize=10 cooldownMs=0 cbThreshold=6
+2026-10-26T08:23:01.937Z fresh stability gate ok for nvidia/nemotron-3-ultra-550b-a55b; gate budget 120000ms is at least as strict as the benchmark per-model-call budget 120000ms
+2026-10-26T08:23:52.938Z preflight models attempt 1: status 200 count 59
+2026-10-26T08:23:52.938Z probe reachable=true detail=Meterless /models responded. model=nvidia/nemotron-3-ultra-550b-a55b models=59 modelTimeoutMs=120000 taskDeadlineMs=360000
+2026-10-26T08:23:52.946Z bench tier selection tier=easy count=100
+2026-10-26T08:23:52.947Z staged batch index=2 size=10 cases=X01,X05,X06,X10,P02,P04,P09,P10,M01,M02
+2026-10-26T08:23:52.961Z seeded 2 memory records for 10 selected cases; memBefore=190
+2026-10-26T08:23:52.962Z A resume quarantined 20: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T08:23:52.962Z A resume preserving 20 record(s) from other batches
+2026-10-26T08:25:23.293Z A X01 ok=true pass=true wallMs=90326 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:26:23.538Z A X05 ok=true pass=true wallMs=59912 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:27:23.661Z A X06 ok=true pass=true wallMs=59818 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:28:23.828Z A X10 ok=true pass=true wallMs=59865 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:29:39.078Z A P02 ok=true pass=true wallMs=74946 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:30:39.320Z A P04 ok=true pass=false wallMs=59936 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:31:39.560Z A P09 ok=true pass=true wallMs=59937 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:32:39.939Z A P10 ok=true pass=true wallMs=60065 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:33:55.295Z A M01 ok=true pass=true wallMs=75050 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:34:55.504Z A M02 ok=true pass=true wallMs=59906 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T08:34:55.808Z B resume quarantined 20: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T08:34:55.809Z B resume preserving 20 record(s) from other batches
+2026-10-26T08:37:11.497Z B X01 ok=true pass=true wallMs=135664 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:39:27.231Z B X05 ok=true pass=true wallMs=135415 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:41:27.338Z B X06 ok=true pass=true wallMs=119793 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:43:27.742Z B X10 ok=true pass=true wallMs=120093 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:45:28.236Z B P02 ok=true pass=true wallMs=120182 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:47:28.665Z B P04 ok=true pass=false wallMs=120109 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:49:29.284Z B P09 ok=true pass=true wallMs=120304 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:51:44.611Z B P10 ok=true pass=true wallMs=134990 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T08:54:30.265Z B M01 ok=true pass=true wallMs=165341 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T08:56:46.731Z B M02 ok=true pass=true wallMs=136145 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T08:56:47.033Z retry pass done count=0
+2026-10-26T08:56:47.053Z cleanup removed=10 settings-restored=autonomous
+2026-10-26T08:56:47.054Z provenance modeA={"provider-analysis":10} modeB={"provider-analysis":8,"mixed":2}
+2026-10-26T08:56:47.055Z provenance-metrics modeA={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":9,"taskPassRatePct":90,"modelBackedPass":9,"modelBackedRatePct":90,"modelBackedEligibleRatePct":90,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":1} modeB={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":9,"taskPassRatePct":90,"modelBackedPass":9,"modelBackedRatePct":90,"modelBackedEligibleRatePct":90,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":1}
+2026-10-26T09:03:56.130Z outdir status=compatible-resume priorManifest=2.0.0 priorRun=run-1793000157068-2.0.0
+2026-10-26T09:03:56.131Z run identity runId=run-1793000157068-2.0.0 batches=4
+2026-10-26T09:03:56.131Z staged config batchIndex=3 batchSize=10 cooldownMs=0 cbThreshold=6
+2026-10-26T09:03:56.132Z fresh stability gate ok for nvidia/nemotron-3-ultra-550b-a55b; gate budget 120000ms is at least as strict as the benchmark per-model-call budget 120000ms
+2026-10-26T09:05:02.609Z preflight models attempt 1: status 200 count 59
+2026-10-26T09:05:02.611Z probe reachable=true detail=Meterless /models responded. model=nvidia/nemotron-3-ultra-550b-a55b models=59 modelTimeoutMs=120000 taskDeadlineMs=360000
+2026-10-26T09:05:02.621Z bench tier selection tier=easy count=100
+2026-10-26T09:05:02.621Z staged batch index=3 size=10 cases=M03,M04,M05,M06,M07,M08,S01,S02,S03,S04
+2026-10-26T09:05:02.653Z seeded 6 memory records for 10 selected cases; memBefore=190
+2026-10-26T09:05:02.658Z A resume quarantined 30: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T09:05:02.658Z A resume preserving 30 record(s) from other batches
+2026-10-26T09:06:32.899Z A M03 ok=true pass=true wallMs=90238 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:07:33.162Z A M04 ok=true pass=false wallMs=59953 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:08:33.357Z A M05 ok=true pass=true wallMs=59892 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:09:33.563Z A M06 ok=true pass=true wallMs=59902 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:10:33.770Z A M07 ok=true pass=true wallMs=59893 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:11:33.979Z A M08 ok=true pass=true wallMs=59905 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:12:34.165Z A S01 ok=true pass=true wallMs=59879 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:13:34.372Z A S02 ok=true pass=false wallMs=59903 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:14:34.522Z A S03 ok=true pass=true wallMs=59847 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:15:34.720Z A S04 ok=true pass=true wallMs=59895 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:15:35.022Z B resume quarantined 30: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T09:15:35.022Z B resume preserving 30 record(s) from other batches
+2026-10-26T09:17:17.628Z B M03 ok=true pass=false wallMs=102592 status=failed outcome=failed tools=memory.search path=mixed err=
+2026-10-26T09:17:19.590Z B M04 ok=true pass=false wallMs=1640 status=failed outcome=failed tools=memory.search path=tool-grounded err=
+2026-10-26T09:19:20.860Z B M05 ok=true pass=true wallMs=120956 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T09:21:36.253Z B M06 ok=true pass=true wallMs=135076 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T09:23:51.669Z B M07 ok=true pass=true wallMs=135104 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T09:25:52.168Z B M08 ok=true pass=true wallMs=120187 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T09:28:37.502Z B S01 ok=true pass=true wallMs=165019 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T09:30:38.047Z B S02 ok=true pass=true wallMs=120231 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T09:32:53.494Z B S03 ok=true pass=true wallMs=135134 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T09:34:53.861Z B S04 ok=true pass=true wallMs=120048 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T09:34:54.163Z retry pass done count=0
+2026-10-26T09:34:54.168Z cleanup removed=10 settings-restored=autonomous
+2026-10-26T09:34:54.169Z provenance modeA={"provider-analysis":10} modeB={"mixed":5,"tool-grounded":1,"provider-analysis":4}
+2026-10-26T09:34:54.169Z provenance-metrics modeA={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":8,"taskPassRatePct":80,"modelBackedPass":8,"modelBackedRatePct":80,"modelBackedEligibleRatePct":80,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":2} modeB={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":8,"taskPassRatePct":80,"modelBackedPass":8,"modelBackedRatePct":80,"modelBackedEligibleRatePct":80,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":2}
+2026-10-26T09:39:24.662Z outdir status=compatible-resume priorManifest=2.0.0 priorRun=run-1793000157068-2.0.0
+2026-10-26T09:39:24.663Z run identity runId=run-1793000157068-2.0.0 batches=5
+2026-10-26T09:39:24.663Z staged config batchIndex=4 batchSize=10 cooldownMs=0 cbThreshold=6
+2026-10-26T09:39:24.664Z fresh stability gate ok for nvidia/nemotron-3-ultra-550b-a55b; gate budget 120000ms is at least as strict as the benchmark per-model-call budget 120000ms
+2026-10-26T09:40:24.268Z preflight models attempt 1: status 200 count 59
+2026-10-26T09:40:24.269Z probe reachable=true detail=Meterless /models responded. model=nvidia/nemotron-3-ultra-550b-a55b models=59 modelTimeoutMs=120000 taskDeadlineMs=360000
+2026-10-26T09:40:24.282Z bench tier selection tier=easy count=100
+2026-10-26T09:40:24.282Z staged batch index=4 size=10 cases=X21,X22,X23,X24,X25,X26,X27,X28,X29,X30
+2026-10-26T09:40:24.288Z seeded 0 memory records for 10 selected cases; memBefore=190
+2026-10-26T09:40:24.289Z A resume quarantined 40: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T09:40:24.289Z A resume preserving 40 record(s) from other batches
+2026-10-26T09:41:24.528Z A X21 ok=true pass=true wallMs=60225 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:42:24.751Z A X22 ok=true pass=true wallMs=59919 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:43:25.029Z A X23 ok=true pass=true wallMs=59973 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:44:25.258Z A X24 ok=true pass=true wallMs=59921 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:45:25.508Z A X25 ok=true pass=true wallMs=59946 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:46:25.733Z A X26 ok=true pass=true wallMs=59916 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:47:26.007Z A X27 ok=true pass=true wallMs=59970 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:48:26.232Z A X28 ok=true pass=true wallMs=59921 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:49:26.499Z A X29 ok=true pass=true wallMs=59965 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:50:26.742Z A X30 ok=true pass=true wallMs=59937 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T09:50:27.046Z B resume quarantined 40: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T09:50:27.046Z B resume preserving 40 record(s) from other batches
+2026-10-26T09:52:27.688Z B X21 ok=true pass=true wallMs=120631 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T09:54:58.294Z B X22 ok=true pass=true wallMs=150287 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T09:57:00.497Z B X23 ok=true pass=true wallMs=121886 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T09:59:14.395Z B X24 ok=true pass=true wallMs=133582 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:01:14.988Z B X25 ok=true pass=true wallMs=120280 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:03:30.467Z B X26 ok=true pass=true wallMs=135166 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:05:31.418Z B X27 ok=true pass=true wallMs=120641 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:07:31.831Z B X28 ok=true pass=true wallMs=120094 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:09:32.376Z B X29 ok=true pass=true wallMs=120231 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:11:32.812Z B X30 ok=true pass=true wallMs=120120 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:11:33.115Z retry pass done count=0
+2026-10-26T10:11:33.127Z cleanup removed=10 settings-restored=autonomous
+2026-10-26T10:11:33.129Z provenance modeA={"provider-analysis":10} modeB={"provider-analysis":10}
+2026-10-26T10:11:33.130Z provenance-metrics modeA={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":10,"taskPassRatePct":100,"modelBackedPass":10,"modelBackedRatePct":100,"modelBackedEligibleRatePct":100,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":0} modeB={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":10,"taskPassRatePct":100,"modelBackedPass":10,"modelBackedRatePct":100,"modelBackedEligibleRatePct":100,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":0}
+2026-10-26T10:15:38.541Z outdir status=compatible-resume priorManifest=2.0.0 priorRun=run-1793000157068-2.0.0
+2026-10-26T10:15:38.542Z run identity runId=run-1793000157068-2.0.0 batches=6
+2026-10-26T10:15:38.542Z staged config batchIndex=5 batchSize=10 cooldownMs=0 cbThreshold=6
+2026-10-26T10:15:38.542Z fresh stability gate ok for nvidia/nemotron-3-ultra-550b-a55b; gate budget 120000ms is at least as strict as the benchmark per-model-call budget 120000ms
+2026-10-26T10:16:33.345Z preflight models attempt 1: status 200 count 59
+2026-10-26T10:16:33.346Z probe reachable=true detail=Meterless /models responded. model=nvidia/nemotron-3-ultra-550b-a55b models=59 modelTimeoutMs=120000 taskDeadlineMs=360000
+2026-10-26T10:16:33.357Z bench tier selection tier=easy count=100
+2026-10-26T10:16:33.357Z staged batch index=5 size=10 cases=X31,X32,X33,X34,X35,X36,P21,P22,P23,P24
+2026-10-26T10:16:33.363Z seeded 0 memory records for 10 selected cases; memBefore=190
+2026-10-26T10:16:33.364Z A resume quarantined 50: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T10:16:33.364Z A resume preserving 50 record(s) from other batches
+2026-10-26T10:17:33.560Z A X31 ok=true pass=true wallMs=60193 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:18:34.363Z A X32 ok=true pass=true wallMs=60284 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:19:34.692Z A X33 ok=true pass=true wallMs=60013 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:20:34.985Z A X34 ok=true pass=true wallMs=59970 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:21:35.209Z A X35 ok=true pass=true wallMs=59916 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:22:35.429Z A X36 ok=true pass=true wallMs=59843 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:23:35.593Z A P21 ok=true pass=true wallMs=59856 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:24:35.888Z A P22 ok=true pass=true wallMs=59991 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:25:36.141Z A P23 ok=true pass=true wallMs=59947 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:26:36.527Z A P24 ok=true pass=false wallMs=60076 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:26:36.831Z B resume quarantined 50: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T10:26:36.831Z B resume preserving 50 record(s) from other batches
+2026-10-26T10:29:07.500Z B X31 ok=true pass=true wallMs=150658 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:31:07.989Z B X32 ok=true pass=true wallMs=120175 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:33:08.434Z B X33 ok=true pass=true wallMs=120132 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:35:08.842Z B X34 ok=true pass=true wallMs=120095 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:37:09.279Z B X35 ok=true pass=true wallMs=120125 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:39:09.791Z B X36 ok=true pass=true wallMs=120201 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:41:10.381Z B P21 ok=true pass=true wallMs=120276 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:43:10.860Z B P22 ok=true pass=true wallMs=120166 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:44:11.672Z B P23 ok=true pass=false wallMs=60500 status=failed outcome=failed tools=fs.list|memory.store path=mixed err=
+2026-10-26T10:46:26.608Z B P24 ok=true pass=true wallMs=134624 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T10:46:26.910Z retry pass done count=0
+2026-10-26T10:46:26.914Z cleanup removed=11 settings-restored=autonomous
+2026-10-26T10:46:26.914Z provenance modeA={"provider-analysis":10} modeB={"provider-analysis":9,"mixed":1}
+2026-10-26T10:46:26.915Z provenance-metrics modeA={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":9,"taskPassRatePct":90,"modelBackedPass":9,"modelBackedRatePct":90,"modelBackedEligibleRatePct":90,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":1} modeB={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":9,"taskPassRatePct":90,"modelBackedPass":9,"modelBackedRatePct":90,"modelBackedEligibleRatePct":90,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":1}
+2026-10-26T10:50:38.949Z outdir status=compatible-resume priorManifest=2.0.0 priorRun=run-1793000157068-2.0.0
+2026-10-26T10:50:38.950Z run identity runId=run-1793000157068-2.0.0 batches=7
+2026-10-26T10:50:38.950Z staged config batchIndex=6 batchSize=10 cooldownMs=0 cbThreshold=6
+2026-10-26T10:50:38.951Z fresh stability gate ok for nvidia/nemotron-3-ultra-550b-a55b; gate budget 120000ms is at least as strict as the benchmark per-model-call budget 120000ms
+2026-10-26T10:51:42.029Z preflight models attempt 1: status 200 count 59
+2026-10-26T10:51:42.032Z probe reachable=true detail=Meterless /models responded. model=nvidia/nemotron-3-ultra-550b-a55b models=59 modelTimeoutMs=120000 taskDeadlineMs=360000
+2026-10-26T10:51:42.076Z bench tier selection tier=easy count=100
+2026-10-26T10:51:42.077Z staged batch index=6 size=10 cases=P25,P26,P27,P28,P29,P30,P31,P32,P33,P34
+2026-10-26T10:51:42.114Z seeded 0 memory records for 10 selected cases; memBefore=190
+2026-10-26T10:51:42.125Z A resume quarantined 60: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T10:51:42.128Z A resume preserving 60 record(s) from other batches
+2026-10-26T10:52:42.432Z A P25 ok=true pass=false wallMs=60299 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:53:57.731Z A P26 ok=true pass=true wallMs=74997 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:54:58.053Z A P27 ok=true pass=true wallMs=60019 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:56:13.591Z A P28 ok=true pass=true wallMs=75232 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:57:13.910Z A P29 ok=true pass=true wallMs=60007 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:58:14.217Z A P30 ok=true pass=true wallMs=60000 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T10:59:14.554Z A P31 ok=true pass=true wallMs=60028 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:00:15.050Z A P32 ok=true pass=true wallMs=60191 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:01:15.707Z A P33 ok=true pass=false wallMs=60350 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:02:16.043Z A P34 ok=true pass=true wallMs=60032 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:02:16.348Z B resume quarantined 60: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T11:02:16.348Z B resume preserving 60 record(s) from other batches
+2026-10-26T11:04:17.145Z B P25 ok=true pass=false wallMs=120781 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T11:06:17.915Z B P26 ok=true pass=true wallMs=120455 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T11:08:18.539Z B P27 ok=true pass=true wallMs=120311 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T11:10:19.040Z B P28 ok=true pass=true wallMs=120187 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T11:12:19.633Z B P29 ok=true pass=true wallMs=120278 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T11:14:20.345Z B P30 ok=true pass=true wallMs=120400 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T11:16:21.112Z B P31 ok=true pass=true wallMs=120448 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T11:18:21.589Z B P32 ok=true pass=true wallMs=120164 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T11:20:22.242Z B P33 ok=true pass=false wallMs=120337 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T11:22:38.163Z B P34 ok=true pass=true wallMs=135606 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T11:22:38.463Z retry pass done count=0
+2026-10-26T11:22:38.468Z cleanup removed=10 settings-restored=autonomous
+2026-10-26T11:22:38.469Z provenance modeA={"provider-analysis":10} modeB={"provider-analysis":10}
+2026-10-26T11:22:38.469Z provenance-metrics modeA={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":8,"taskPassRatePct":80,"modelBackedPass":8,"modelBackedRatePct":80,"modelBackedEligibleRatePct":80,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":2} modeB={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":8,"taskPassRatePct":80,"modelBackedPass":8,"modelBackedRatePct":80,"modelBackedEligibleRatePct":80,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":2}
+2026-10-26T11:26:51.118Z outdir status=compatible-resume priorManifest=2.0.0 priorRun=run-1793000157068-2.0.0
+2026-10-26T11:26:51.119Z run identity runId=run-1793000157068-2.0.0 batches=8
+2026-10-26T11:26:51.119Z staged config batchIndex=7 batchSize=10 cooldownMs=0 cbThreshold=6
+2026-10-26T11:26:51.120Z fresh stability gate ok for nvidia/nemotron-3-ultra-550b-a55b; gate budget 120000ms is at least as strict as the benchmark per-model-call budget 120000ms
+2026-10-26T11:27:39.218Z preflight models attempt 1: status 200 count 59
+2026-10-26T11:27:39.219Z probe reachable=true detail=Meterless /models responded. model=nvidia/nemotron-3-ultra-550b-a55b models=59 modelTimeoutMs=120000 taskDeadlineMs=360000
+2026-10-26T11:27:39.227Z bench tier selection tier=easy count=100
+2026-10-26T11:27:39.227Z staged batch index=7 size=10 cases=P35,P36,M21,M22,M23,M24,M25,M26,M27,M28
+2026-10-26T11:27:39.394Z seeded 8 memory records for 10 selected cases; memBefore=190
+2026-10-26T11:27:39.395Z A resume quarantined 70: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T11:27:39.395Z A resume preserving 70 record(s) from other batches
+2026-10-26T11:28:39.517Z A P35 ok=true pass=false wallMs=60119 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:29:39.954Z A P36 ok=true pass=false wallMs=60130 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:30:40.042Z A M21 ok=true pass=false wallMs=59784 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:31:55.463Z A M22 ok=true pass=false wallMs=75111 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:32:55.774Z A M23 ok=true pass=false wallMs=60006 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:33:56.031Z A M24 ok=true pass=false wallMs=59954 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:34:56.340Z A M25 ok=true pass=false wallMs=60004 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:35:56.653Z A M26 ok=true pass=false wallMs=59997 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:36:56.971Z A M27 ok=true pass=false wallMs=60013 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:37:57.379Z A M28 ok=true pass=false wallMs=60105 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T11:37:57.689Z B resume quarantined 70: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T11:37:57.690Z B resume preserving 70 record(s) from other batches
+2026-10-26T11:39:58.362Z B P35 ok=true pass=false wallMs=120659 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T11:41:58.990Z B P36 ok=true pass=false wallMs=120314 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T11:43:59.421Z B M21 ok=true pass=false wallMs=120116 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T11:45:59.998Z B M22 ok=true pass=false wallMs=120248 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T11:48:00.510Z B M23 ok=true pass=false wallMs=120190 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T11:50:01.012Z B M24 ok=true pass=true wallMs=120188 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T11:52:01.604Z B M25 ok=true pass=false wallMs=120277 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T11:54:02.137Z B M26 ok=true pass=false wallMs=120219 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T11:56:02.768Z B M27 ok=true pass=false wallMs=120318 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T11:58:03.788Z B M28 ok=true pass=false wallMs=120702 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T11:58:04.091Z retry pass done count=0
+2026-10-26T11:58:04.138Z cleanup removed=15 settings-restored=autonomous
+2026-10-26T11:58:04.138Z provenance modeA={"provider-analysis":10} modeB={"provider-analysis":2,"mixed":8}
+2026-10-26T11:58:04.140Z provenance-metrics modeA={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":0,"taskPassRatePct":0,"modelBackedPass":0,"modelBackedRatePct":0,"modelBackedEligibleRatePct":0,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":10} modeB={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":1,"taskPassRatePct":10,"modelBackedPass":1,"modelBackedRatePct":10,"modelBackedEligibleRatePct":10,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":9}
+2026-10-26T12:02:24.062Z outdir status=compatible-resume priorManifest=2.0.0 priorRun=run-1793000157068-2.0.0
+2026-10-26T12:02:24.063Z run identity runId=run-1793000157068-2.0.0 batches=9
+2026-10-26T12:02:24.063Z staged config batchIndex=8 batchSize=10 cooldownMs=0 cbThreshold=6
+2026-10-26T12:02:24.064Z fresh stability gate ok for nvidia/nemotron-3-ultra-550b-a55b; gate budget 120000ms is at least as strict as the benchmark per-model-call budget 120000ms
+2026-10-26T12:03:34.536Z preflight models attempt 1: status 200 count 59
+2026-10-26T12:03:34.536Z probe reachable=true detail=Meterless /models responded. model=nvidia/nemotron-3-ultra-550b-a55b models=59 modelTimeoutMs=120000 taskDeadlineMs=360000
+2026-10-26T12:03:34.546Z bench tier selection tier=easy count=100
+2026-10-26T12:03:34.547Z staged batch index=8 size=10 cases=M29,M30,M31,M32,S21,S22,S23,S24,S25,S26
+2026-10-26T12:03:34.665Z seeded 4 memory records for 10 selected cases; memBefore=190
+2026-10-26T12:03:34.667Z A resume quarantined 80: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T12:03:34.667Z A resume preserving 80 record(s) from other batches
+2026-10-26T12:05:34.683Z A M29 ok=false pass=false wallMs=120013 model=null path=not-invoked err=Meterless timed out after 120000ms.
+2026-10-26T12:07:20.325Z A M30 ok=true pass=false wallMs=105334 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:08:20.820Z A M31 ok=true pass=false wallMs=60190 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:09:51.354Z A M32 ok=true pass=false wallMs=90228 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:10:51.597Z A S21 ok=true pass=true wallMs=59939 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:12:06.946Z A S22 ok=true pass=true wallMs=75041 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:13:37.344Z A S23 ok=true pass=true wallMs=90091 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:15:07.735Z A S24 ok=true pass=true wallMs=90086 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:16:08.022Z A S25 ok=true pass=true wallMs=59974 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:17:23.570Z A S26 ok=true pass=true wallMs=75241 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:17:23.873Z B resume quarantined 80: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T12:17:23.874Z B resume preserving 80 record(s) from other batches
+2026-10-26T12:19:24.806Z B M29 ok=true pass=false wallMs=120911 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T12:21:40.607Z B M30 ok=true pass=false wallMs=135381 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T12:23:56.735Z B M31 ok=true pass=false wallMs=135777 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T12:26:12.811Z B M32 ok=true pass=false wallMs=135731 status=completed outcome=completed tools=memory.search path=mixed err=
+2026-10-26T12:28:31.794Z B S21 ok=true pass=true wallMs=138549 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T12:28:32.454Z B S22 ok=false pass=false wallMs=355 status=null outcome=null tools= path=not-invoked err=Unknown task
+2026-10-26T12:30:44.273Z B S23 ok=true pass=true wallMs=131474 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T12:33:14.625Z B S24 ok=true pass=true wallMs=150031 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T12:35:15.425Z B S25 ok=true pass=true wallMs=120486 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T12:37:16.117Z B S26 ok=true pass=true wallMs=120377 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T12:38:16.106Z A RETRY M29 ok=true pass=true path=provider-analysis firstErr=Meterless timed out after 120000ms.
+2026-10-26T12:40:32.199Z B RETRY S22 ok=true pass=true path=provider-analysis firstErr=Unknown task
+2026-10-26T12:40:32.500Z retry pass done count=2
+2026-10-26T12:40:32.515Z cleanup removed=13 settings-restored=autonomous
+2026-10-26T12:40:32.516Z provenance modeA={"provider-analysis":10} modeB={"mixed":4,"provider-analysis":6}
+2026-10-26T12:40:32.516Z provenance-metrics modeA={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":7,"taskPassRatePct":70,"modelBackedPass":7,"modelBackedRatePct":70,"modelBackedEligibleRatePct":70,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":3} modeB={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":6,"taskPassRatePct":60,"modelBackedPass":6,"modelBackedRatePct":60,"modelBackedEligibleRatePct":60,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":4}
+2026-10-26T12:45:08.639Z outdir status=compatible-resume priorManifest=2.0.0 priorRun=run-1793000157068-2.0.0
+2026-10-26T12:45:08.640Z run identity runId=run-1793000157068-2.0.0 batches=10
+2026-10-26T12:45:08.640Z staged config batchIndex=9 batchSize=10 cooldownMs=0 cbThreshold=6
+2026-10-26T12:45:08.641Z fresh stability gate ok for nvidia/nemotron-3-ultra-550b-a55b; gate budget 120000ms is at least as strict as the benchmark per-model-call budget 120000ms
+2026-10-26T12:46:02.993Z preflight models attempt 1: status 200 count 59
+2026-10-26T12:46:02.995Z probe reachable=true detail=Meterless /models responded. model=nvidia/nemotron-3-ultra-550b-a55b models=59 modelTimeoutMs=120000 taskDeadlineMs=360000
+2026-10-26T12:46:03.005Z bench tier selection tier=easy count=100
+2026-10-26T12:46:03.005Z staged batch index=9 size=10 cases=S27,S28,S29,S30,S31,S32,S33,S34,S35,S36
+2026-10-26T12:46:03.010Z seeded 0 memory records for 10 selected cases; memBefore=190
+2026-10-26T12:46:03.013Z A resume quarantined 90: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T12:46:03.013Z A resume preserving 90 record(s) from other batches
+2026-10-26T12:47:33.422Z A S27 ok=true pass=true wallMs=90405 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:48:48.761Z A S28 ok=true pass=true wallMs=75032 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:50:49.080Z A S29 ok=false pass=false wallMs=120015 model=null path=not-invoked err=Meterless timed out after 120000ms.
+2026-10-26T12:51:49.598Z A S30 ok=true pass=true wallMs=60214 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:53:05.016Z A S31 ok=true pass=true wallMs=75112 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:54:20.348Z A S32 ok=true pass=true wallMs=75028 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:55:20.596Z A S33 ok=true pass=true wallMs=59944 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:56:21.027Z A S34 ok=true pass=true wallMs=60110 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:57:21.330Z A S35 ok=true pass=true wallMs=59996 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:58:21.625Z A S36 ok=true pass=true wallMs=59991 model=nvidia/nemotron-3-ultra-550b-a55b path=provider-analysis err=
+2026-10-26T12:58:21.929Z B resume quarantined 90: R01:not in current batch targets,R02:not in current batch targets,R03:not in current batch targets,R04:not in current batch targets,R05:not in current batch targets
+2026-10-26T12:58:21.929Z B resume preserving 90 record(s) from other batches
+2026-10-26T13:00:22.591Z B S27 ok=true pass=true wallMs=120649 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T13:02:23.188Z B S28 ok=true pass=true wallMs=120284 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T13:04:38.983Z B S29 ok=true pass=true wallMs=135481 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T13:06:39.569Z B S30 ok=true pass=true wallMs=120271 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T13:08:40.207Z B S31 ok=true pass=true wallMs=120303 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T13:10:56.000Z B S32 ok=true pass=true wallMs=135479 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T13:12:56.794Z B S33 ok=true pass=true wallMs=120481 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T13:14:57.261Z B S34 ok=true pass=true wallMs=120154 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T13:16:57.904Z B S35 ok=true pass=true wallMs=120317 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T13:19:13.570Z B S36 ok=true pass=true wallMs=135352 status=completed outcome=completed tools= path=provider-analysis err=
+2026-10-26T13:20:28.435Z A RETRY S29 ok=true pass=true path=provider-analysis firstErr=Meterless timed out after 120000ms.
+2026-10-26T13:20:28.737Z retry pass done count=1
+2026-10-26T13:20:28.743Z cleanup removed=10 settings-restored=autonomous
+2026-10-26T13:20:28.745Z provenance modeA={"provider-analysis":10} modeB={"provider-analysis":10}
+2026-10-26T13:20:28.745Z provenance-metrics modeA={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":10,"taskPassRatePct":100,"modelBackedPass":10,"modelBackedRatePct":100,"modelBackedEligibleRatePct":100,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":0} modeB={"attempted":10,"eligible":10,"coveragePct":100,"taskPass":10,"taskPassRatePct":100,"modelBackedPass":10,"modelBackedRatePct":100,"modelBackedEligibleRatePct":100,"deterministicToolPass":0,"toolGroundedPass":0,"fallbackUnprovenPass":0,"refusalPass":0,"refusalFail":0,"notExecuted":0,"failed":0}
+2026-10-26T13:36:49Z gate-cadence amendment enacted; effective easy-medium tier batch 0; full gates on even/tier-transition/post-infra/forced batches, light 1-chat gates otherwise; preflight every batch; record=gate-policy.json

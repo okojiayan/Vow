@@ -417,7 +417,7 @@ function WorkspaceInner() {
     detail: stepStatusText(st.status),
   }));
 
-  const isEmpty = messages.length === 0 && !loading && !shownTask;
+  const isEmpty = messages.length === 0 && !shownTask && (!loading || convoRequested == null);
   const companionMode = (() => { try { return loadPreferences().companion ?? "full"; } catch { return "full" as const; } })();
   const { state: companionState, lookAtActivity } = useCompanionAgent(conversationId ?? null, isEmpty && companionMode === "full");
   const reduceMotion = (() => { try { return loadPreferences().reduceMotion ?? false; } catch { return false; } })();
@@ -453,7 +453,7 @@ function WorkspaceInner() {
           </div>
         ) : null}
 
-        {loading ? (
+        {loading && convoRequested != null ? (
           <div className="shell-thread" aria-live="polite">
             <div className="shell-msg-row">
               <span className="shell-ava" aria-hidden="true">

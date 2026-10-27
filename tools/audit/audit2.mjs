@@ -6,10 +6,17 @@ const ROUTES = ['/', '/tasks', '/memory', '/search', '/library', '/history', '/r
 const THEMES = (process.env.AUDIT_THEMES ? process.env.AUDIT_THEMES.split(',') : ['light', 'dark', 'warden']);
 const WIDTHS = [1440, 390, 320];
 const KEY = 'vow-ds-theme-v1';
-function lum(hex) {
-  const m = hex.replace('#',''); if (m.length !== 6) return null;
-  const v = [0,2,4].map(i => parseInt(m.slice(i,i+2),16)/255).map(x => x <= 0.03928 ? x/12.92 : Math.pow((x+0.055)/1.055, 2.4));
-  return 0.2126*v[0] + 0.7152*v[1] + 0.0722*v[2];
+function chan(v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }
+function lumRgb(r, g, b) { return 0.2126 * chan(r) + 0.7152 * chan(g) + 0.0722 * chan(b); }
+function lum(s) {
+  s = (s || '').trim().toLowerCase();
+  const hm = s.match(/^[#]([0-9a-f]{6})$/);
+  if (hm) { const v = [0, 2, 4].map((i) => parseInt(hm[1].slice(i, i + 2), 16)); return lumRgb(v[0], v[1], v[2]); }
+  if (s.indexOf('rgb') === 0) {
+    const nums = s.replace(/[^0-9.,]/g, '').split(',').map(Number);
+    if (nums.length >= 3 && nums.slice(0, 3).every(Number.isFinite)) return lumRgb(nums[0], nums[1], nums[2]);
+  }
+  return null;
 }
 function ratio(a, b) { const x = lum(a), y = lum(b); if (x === null || y === null) return null; return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05); }
 const browser = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', args: ['--no-sandbox'] });
@@ -34,7 +41,7 @@ for (const theme of THEMES) {
   const info = await p.evaluate(() => { const el = document.querySelector('.ds-scope'); if (!el) return null; const s = getComputedStyle(el); const g = (n) => s.getPropertyValue(n).trim(); return { theme: el.getAttribute('data-theme'), bg: g('--ds-bg'), surface: g('--ds-surface'), ink: g('--ds-ink'), soft: g('--ds-ink-soft'), muted: g('--ds-muted'), border: g('--ds-border-strong'), accent: g('--ds-accent') }; }).catch(() => null);
   if (info) {
     const pairs = { 'ink/bg': [info.ink, info.bg], 'ink-soft/bg': [info.soft, info.bg], 'muted/bg': [info.muted, info.bg], 'muted/surface': [info.muted, info.surface], 'ink/surface': [info.ink, info.surface], 'border-strong/bg': [info.border, info.bg], 'border-strong/surface': [info.border, info.surface], 'accent/bg': [info.accent, info.bg] };
-    contrast[theme] = { dataTheme: info.theme, pairs: Object.fromEntries(Object.entries(pairs).map(([k, [a, b]]) => [k, a && b ? Number(ratio(a, b).toFixed(2)) : null])) };
+    contrast[theme] = { dataTheme: info.theme, pairs: Object.fromEntries(Object.entries(pairs).map(([k, [a, b]]) => [k, (() => { try { const r = a && b ? ratio(a, b) : null; return r == null || !Number.isFinite(r) ? null : Number(r.toFixed(2)); } catch { return null; } })()])) };
   }
   await ctx.close();
 }

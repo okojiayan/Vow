@@ -1,0 +1,38 @@
+{
+ "amendment": "gate-cadence-2-batch",
+ "authorizedBy": "user",
+ "enactedAt": "2026-10-26T13:36:48Z",
+ "effectiveTier": "easy-medium",
+ "effectiveBatchIndex": 0,
+ "policy": {
+  "fullGateChats": 3,
+  "lightGateChats": 1,
+  "fullGateRequiredWhen": [
+   "tier-transition (fresh OUTDIR)",
+   "prior-batch infrastructure failure",
+   "BENCH_GATE_FULL=1 override",
+   "even batch index"
+  ],
+  "lightGateAllowedWhen": [
+   "odd batch index with a clean prior batch"
+  ],
+  "preflightEveryBatch": true,
+  "gateFreshnessUnchanged": true
+ },
+ "guarantees": [
+  "all cases, both modes, order unchanged",
+  "grading unchanged",
+  "timeouts unchanged",
+  "retry/breaker unchanged",
+  "run IDs retained",
+  "results append-only",
+  "gate file always records actual depth (minChats)"
+ ],
+ "codeRefs": [
+  "tests/evals/bench-protocol.ts: requiredGateChats/priorBatchInfraHit",
+  "scripts/bench-stability-gate.mjs: --chats floor 1, default 3",
+  "tests/evals/nemotron-vs-full-100.test.ts: gate block enforces scheduled depth",
+  "tests/evals/gate-cadence.test.ts: offline regression tests"
+ ],
+ "estimatedSaving": "light gate ~85s vs full gate ~180s; ~95s per light batch, ~20 light batches over remaining 40 batches ~= 30min"
+}

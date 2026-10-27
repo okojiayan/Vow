@@ -34,7 +34,7 @@ export function AutonomyMenu({ value, onChange }: { value: UiAutonomyMode; onCha
       >
         <span className="mode-dot" aria-hidden="true" />
         <CurrentIcon size={14} aria-hidden="true" />
-        {current.label}
+        <span className="mode-label">{current.label}</span>
         <ChevronDown size={14} aria-hidden="true" />
       </button>
       {open ? (

@@ -1,0 +1,10 @@
+{
+ "tripped": true,
+ "consecutive": 6,
+ "total": 9,
+ "threshold": 6,
+ "reason": "Circuit breaker tripped after 6 consecutive infrastructure failures (last: B X92: identity-mismatch model=heuristic-demo).",
+ "atCaseId": "X92",
+ "atMode": "B",
+ "atTime": "2026-10-27T06:49:05.486Z"
+}

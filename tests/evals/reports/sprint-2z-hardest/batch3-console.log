@@ -1,0 +1,28 @@
+
+ RUN  v3.2.7 /Users/ayan/Vow-repo
+
+ ❯ tests/evals/nemotron-vs-full-100.test.ts (1 test | 1 failed) 107854ms
+   × nemotron vs full-system benchmark (matched cases) > runs matched benchmark, scores deterministically, writes artifacts 107853ms
+     → Circuit breaker tripped during Mode B X92; completed results preserved, resume after a fresh gate pass.
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/evals/nemotron-vs-full-100.test.ts > nemotron vs full-system benchmark (matched cases) > runs matched benchmark, scores deterministically, writes artifacts
+Error: Circuit breaker tripped during Mode B X92; completed results preserved, resume after a fresh gate pass.
+ ❯ tests/evals/nemotron-vs-full-100.test.ts:632:40
+    630|       if (r.taskId) clearLedger(r.taskId);
+    631|       logProgress(`B ${c.id} ok=${r.ok} pass=${r.pass} wallMs=${r.wall…
+    632|       if (noteRun("B", c.id, r)) throw new Error(`Circuit breaker trip…
+       |                                        ^
+    633|       await sleep(BETWEEN_RUN_DELAY_MS);
+    634|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  12:17:16
+   Duration  108.82s (transform 357ms, setup 0ms, collect 484ms, tests 107.85s, environment 0ms, prepare 99ms)
+
+VITEST_EXIT=1

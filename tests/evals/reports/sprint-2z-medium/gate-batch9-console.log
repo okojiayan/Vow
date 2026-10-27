@@ -1,0 +1,2 @@
+GATE passed=true checks=models:ok,chat0:ok
+EXIT:0

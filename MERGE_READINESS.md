@@ -26,8 +26,10 @@
 - `node tools/audit/companion-placement.mjs` — 12/12 PASS
 - `node tools/audit/verify-fixes.mjs` — 47/47 PASS (combos 5x, banner 9x, palette 3x, contrast)
 - `node tools/audit/contrast3.mjs` — 24/24 pairs AA
-- `node tools/audit/audit2.mjs` (or `AUDIT_THEMES=x AUDIT_TAG=x`) — 126 rows, zero failures (post-fix)
-- `node tools/audit/perf-fps.mjs` — 59.5fps
+- `node tools/audit/audit2.mjs` (lum parses rgb() — prod serializes tokens as rgb, not hex) — prod build, 126 rows: 121 clean, 5 load-flake cells (parallel-run only), all 5 pass isolated recheck — 126/126 effective
+- `node tools/audit/contrast3.mjs` — 24/24 pairs AA on the production build
+- Home TTI (dev, hero paint): ~2.4s before → ~0.5s after the no-wait fix (WorkspaceApp renders shell+mascot+composer before /api/conversations resolves; recents load behind skeleton)
+- Idle perf on prod (10s traces, headless): hero 60fps at ~41% CPU, tasks-dock 59fps at ~72% CPU — MISSES the 5% target (see open items)
 - Shots: `/tmp/vow-shots/` — 60 full-app + 19 empty + 10 transformation + slots + grayscale + face-sizes
 
 ## Known limitations / open items (outside UI scope — backend decisions needed)
@@ -36,9 +38,8 @@
 - Warden enforcement lives server-side; UI only reflects `/api/warden`.
 - memory.store + run_sql run without approval under Supervised (stated in UI).
 - skill.invoke has no inventory entry (stated in UI).
-- `/api/conversations` returns ~835KB (full histories) and takes ~3.6s;
-  the home screen waits on it. Backend pagination would fix load + audit
-  flakiness. Not touched (out of scope).
+- `/api/conversations` returns ~911KB (full histories); `/api/agent` ~8MB, `/api/traces/all` ~8.5MB. Home no longer waits on them (fixed this round), but 3-5s polling of these payloads + always-on mascot animation keep idle CPU at ~40-70% vs the 5% target. Backend pagination / lighter poll payloads would fix it. Not touched (out of scope).
+- If `next build` fails with no direct app page entry found for /icon.svg, clear .next and rebuild: a dev server racing the build poisons the incremental cache. Not an app bug.
 
 ## Manual click-through for the owner
 Desktop + a real phone. Hero, dock and rail. Every route in all three

@@ -1,0 +1,45 @@
+{
+ "batchIndex": 9,
+ "batchSize": 10,
+ "caseIds": [
+  "S59",
+  "S60",
+  "S61",
+  "S62",
+  "S63",
+  "S64",
+  "S65",
+  "S66",
+  "S67",
+  "S68"
+ ],
+ "breaker": {
+  "tripped": false,
+  "consecutive": 0,
+  "total": 0,
+  "threshold": 6,
+  "reason": null,
+  "atCaseId": null,
+  "atMode": null,
+  "atTime": null
+ },
+ "modeA": {
+  "assigned": 10,
+  "passed": 10,
+  "endToEndPct": 100,
+  "providerOk": 10,
+  "infraFailed": 0,
+  "passedGivenProviderOk": 10,
+  "conditionalPct": 100
+ },
+ "modeB": {
+  "assigned": 10,
+  "passed": 4,
+  "endToEndPct": 40,
+  "providerOk": 10,
+  "infraFailed": 0,
+  "passedGivenProviderOk": 4,
+  "conditionalPct": 40
+ },
+ "note": "Supplementary only: end-to-end rates use all assigned runs; conditional rates use provider-executed runs. Grading and scoring unchanged."
+}

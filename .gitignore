@@ -1,0 +1,19 @@
+node_modules
+.next
+out
+dist
+coverage
+.DS_Store
+*.log
+.env
+.env.local
+.env.*.local
+data
+!.gitkeep
+tests/evals/reports/*
+!tests/evals/reports/.gitkeep
+playwright-report
+test-results
+
+# TypeScript incremental build cache
+*.tsbuildinfo

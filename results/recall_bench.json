@@ -1,0 +1,153 @@
+{
+  "date": "2026-10-24T08:38:19.036Z",
+  "method": "VOW metadata recall (keyword+recency+importance, top-3, honest local run)",
+  "accuracy": "14 of 20",
+  "tokens": {
+    "full_history": 307,
+    "summary": 400,
+    "vow_metadata": 800
+  },
+  "latency_ms": 1,
+  "rows": [
+    {
+      "q": "What do you remember about morning summary preference?",
+      "want": "user prefers morning summaries",
+      "got": "user prefers morning summaries",
+      "ok": true,
+      "score": 15
+    },
+    {
+      "q": "What do you remember about vault code?",
+      "want": "vault code is 9999 per user",
+      "got": "vault code is 9999 per user",
+      "ok": true,
+      "score": 10
+    },
+    {
+      "q": "What do you remember about dentist date?",
+      "want": "dentist on 2025-11-02",
+      "got": "dentist on 2025-11-02",
+      "ok": true,
+      "score": 10
+    },
+    {
+      "q": "What do you remember about rent amount?",
+      "want": "rent is $1200 due on 1st",
+      "got": "rent is $1200 due on 1st",
+      "ok": true,
+      "score": 10
+    },
+    {
+      "q": "What do you remember about gym habit?",
+      "want": "user goes gym Tue Thu",
+      "got": "user goes gym Tue Thu",
+      "ok": true,
+      "score": 10
+    },
+    {
+      "q": "What do you remember about coffee order?",
+      "want": "oat latte no sugar",
+      "got": "oat latte no sugar",
+      "ok": true,
+      "score": 8
+    },
+    {
+      "q": "What do you remember about flight?",
+      "want": "flight AI202 on Dec 5",
+      "got": "Dr Rao said A1C 6.1",
+      "ok": false,
+      "score": 5
+    },
+    {
+      "q": "What do you remember about doctor?",
+      "want": "Dr Rao said A1C 6.1",
+      "got": "Dr Rao said A1C 6.1",
+      "ok": true,
+      "score": 8
+    },
+    {
+      "q": "What do you remember about project deadline?",
+      "want": "Atlas demo on Friday",
+      "got": "Atlas demo on Friday",
+      "ok": true,
+      "score": 8
+    },
+    {
+      "q": "What do you remember about book?",
+      "want": "reading Dune chapter 4",
+      "got": "Dr Rao said A1C 6.1",
+      "ok": false,
+      "score": 5
+    },
+    {
+      "q": "What do you remember about allergy?",
+      "want": "allergic to peanuts",
+      "got": "Dr Rao said A1C 6.1",
+      "ok": false,
+      "score": 5
+    },
+    {
+      "q": "What do you remember about emergency contact?",
+      "want": "call Priya at 555-0101",
+      "got": "call Priya at 555-0101",
+      "ok": true,
+      "score": 8
+    },
+    {
+      "q": "What do you remember about subscription audit?",
+      "want": "cancel GamePass trial",
+      "got": "cancel GamePass trial",
+      "ok": true,
+      "score": 8
+    },
+    {
+      "q": "What do you remember about salary day?",
+      "want": "salary lands on 30th",
+      "got": "salary lands on 30th",
+      "ok": true,
+      "score": 10
+    },
+    {
+      "q": "What do you remember about car service?",
+      "want": "service due Nov 20",
+      "got": "service due Nov 20",
+      "ok": true,
+      "score": 8
+    },
+    {
+      "q": "What do you remember about hotel?",
+      "want": "stay at Grand Plaza room 412",
+      "got": "Dr Rao said A1C 6.1",
+      "ok": false,
+      "score": 5
+    },
+    {
+      "q": "What do you remember about wifi password?",
+      "want": "wifi code plum-42",
+      "got": "wifi code plum-42",
+      "ok": true,
+      "score": 10
+    },
+    {
+      "q": "What do you remember about coach?",
+      "want": "coach name is Iyer",
+      "got": "Dr Rao said A1C 6.1",
+      "ok": false,
+      "score": 5
+    },
+    {
+      "q": "What do you remember about language?",
+      "want": "prefers Hindi summaries",
+      "got": "Dr Rao said A1C 6.1",
+      "ok": false,
+      "score": 5
+    },
+    {
+      "q": "What do you remember about gym fee?",
+      "want": "gym fee $29 monthly",
+      "got": "gym fee $29 monthly",
+      "ok": true,
+      "score": 10
+    }
+  ]
+}

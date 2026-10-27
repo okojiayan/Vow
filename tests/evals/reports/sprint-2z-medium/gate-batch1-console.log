@@ -1,0 +1,1 @@
+GATE passed=true checks=models:ok,chat0:ok,chat1:ok,chat2:ok

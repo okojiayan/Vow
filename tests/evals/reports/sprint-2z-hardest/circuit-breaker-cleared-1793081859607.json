@@ -1,0 +1,10 @@
+{
+ "tripped": true,
+ "consecutive": 6,
+ "total": 6,
+ "threshold": 6,
+ "reason": "Circuit breaker tripped after 6 consecutive infrastructure failures (last: B R96: identity-mismatch model=heuristic-demo).",
+ "atCaseId": "R96",
+ "atMode": "B",
+ "atTime": "2026-10-27T06:10:40.203Z"
+}

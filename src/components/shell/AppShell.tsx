@@ -12,20 +12,29 @@ import { ChromeProvider, useChrome } from "./ChromeContext";
 import { ThemeProvider, useTheme } from "./ThemeContext";
 
 import { shouldPlayActivation } from "@/lib/task-display";
-import { WardenTransformation } from "@/components/vow/WardenTransformation";
+import { WardenTransformation, type TransformOrigin, type TransformVerdict } from "@/components/vow/WardenTransformation";
+import "@/components/vow/warden-transformation.css";
 import { PersistentLiveActivity } from "@/components/live/PersistentLiveActivity";
 import { DEFAULT_PREFERENCES, loadPreferences, type UiPreferences } from "@/lib/preferences";
 import { CommandPalette, type PaletteItem } from "@/components/ui/CommandPalette";
 
 function ShellChrome({ children }: { children: React.ReactNode }) {
-  const { warden, toggleWarden } = useMode();
-  const { drawerOpen, sidebarOpen, setSidebarOpen, toggleSidebar, toggleDrawer, requestNewChat, paletteOpen, setPaletteOpen } = useChrome();
+  const { warden, toggleWarden, wardenResult } = useMode();
+  const { drawerOpen, sidebarOpen, setSidebarOpen, toggleSidebar, toggleDrawer, requestNewChat, paletteOpen, setPaletteOpen, conversationId } = useChrome();
   const router = useRouter();
   const [prefs, setPrefs] = useState<UiPreferences>(DEFAULT_PREFERENCES);
-  const [transforming, setTransforming] = useState(false);
-  const [transformEntering, setTransformEntering] = useState(true);
+  const [transform, setTransform] = useState<{ id: number; entering: boolean; origin: TransformOrigin; verdict: TransformVerdict; error: string | null } | null>(null);
+  const transformId = useRef(0);
+  const { effective } = useTheme();
+  const pathname = usePathname();
   const prevWarden = useRef(warden);
-  const endTransform = useCallback(() => setTransforming(false), []);
+  const endTransform = useCallback(() => setTransform(null), []);
+  // A newer toggle intent replaces an in-flight transformation: a single
+  // slot plus a fresh key means overlapping transformations cannot stack.
+  const startTransform = useCallback((entering: boolean, origin: TransformOrigin, verdict: TransformVerdict, error: string | null) => {
+    transformId.current += 1;
+    setTransform({ id: transformId.current, entering, origin, verdict, error });
+  }, []);
 
   useEffect(() => {
     try { setPrefs(loadPreferences()); } catch { /* default */ }
@@ -78,12 +87,30 @@ function ShellChrome({ children }: { children: React.ReactNode }) {
     ) {
       return;
     }
-    setTransformEntering(entering);
-    setTransforming(true);
-  }, [warden, prefs.reduceMotion, prefs.playFullActivation]);
+    // Origin follows the slot the mascot lifts out of.
+    const origin: TransformOrigin = !sidebarOpen ? "rail" : pathname === "/" && !conversationId ? "hero" : "dock";
+    startTransform(entering, origin, "confirmed", null);
+  }, [warden, prefs.reduceMotion, prefs.playFullActivation, startTransform, sidebarOpen, pathname, conversationId]);
 
-  const { effective } = useTheme();
-  const pathname = usePathname();
+  // Failed toggles never change the enforced mode, but they do start the
+  // transformation's failed beat so the error is visible and provable.
+  const prevResultAt = useRef<number | null>(null);
+  useEffect(() => {
+    if (!wardenResult || wardenResult.ok || wardenResult.at === prevResultAt.current) return;
+    prevResultAt.current = wardenResult.at;
+    const origin: TransformOrigin = !sidebarOpen ? "rail" : pathname === "/" && !conversationId ? "hero" : "dock";
+    startTransform(wardenResult.entering, origin, "failed", wardenResult.message ?? null);
+  }, [wardenResult, startTransform, sidebarOpen, pathname, conversationId]);
+
+  // Act V theme settle: while the stage plays, shell surfaces crossfade
+  // their token-driven colors instead of snapping.
+  useEffect(() => {
+    try {
+      document.body.classList.toggle("wt-settling", transform !== null);
+    } catch { /* ignore */ }
+    return () => { try { document.body.classList.remove("wt-settling"); } catch { /* ignore */ } };
+  }, [transform]);
+
   // Only the chat/home screen migrates to the DS in Stage 4. Every other
   // route keeps its existing styling until Stage 5.
   const isChat = pathname === "/";
@@ -111,8 +138,16 @@ function ShellChrome({ children }: { children: React.ReactNode }) {
         <PersistentLiveActivity />
       </div>
       {sidebarOpen ? <div className="shell-backdrop" onClick={() => setSidebarOpen(false)} aria-hidden="true" /> : null}
-      {transforming ? (
-        <WardenTransformation entering={transformEntering} onSkip={endTransform} onDone={endTransform} />
+      {transform ? (
+        <WardenTransformation
+          key={transform.id}
+          entering={transform.entering}
+          origin={transform.origin}
+          verdict={transform.verdict}
+          error={transform.error}
+          onSkip={endTransform}
+          onDone={endTransform}
+        />
       ) : null}
       <div className="ds-scope" data-theme={effective}>
         <GlobalCommandPalette

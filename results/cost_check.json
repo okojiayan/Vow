@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-24T08:38:19.081Z",
+  "trivial_hi": {
+    "tokens": 12,
+    "latency_ms": 6
+  },
+  "hard_task": {
+    "tokens": 900,
+    "latency_ms": 2,
+    "note": "60-row deterministic detector + mock explain (no model key used)"
+  }
+}

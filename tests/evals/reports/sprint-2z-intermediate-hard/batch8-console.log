@@ -1,0 +1,19 @@
+
+ RUN  v3.2.7 /Users/ayan/Vow-repo
+
+stdout | tests/evals/nemotron-vs-full-100.test.ts > nemotron vs full-system benchmark (matched cases) > runs matched benchmark, scores deterministically, writes artifacts
+BENCH matched=10 A=50% B=70% diffPp=20 Bwin=2 Awin=0 tie=8
+BENCH lat A median/p95=2261/18532 B=17375/36904
+BENCH errors A=0 B=0 timeouts B=0 falseSuccessB=3
+BENCH modelbacked A=0/10 (0%) B=2/10 (20%) fallback B=0 refusal B=5
+BENCH residueSuspect A=3 B=0
+
+ ✓ tests/evals/nemotron-vs-full-100.test.ts (1 test) 228186ms
+   ✓ nemotron vs full-system benchmark (matched cases) > runs matched benchmark, scores deterministically, writes artifacts  228184ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  10:28:32
+   Duration  230.85s (transform 924ms, setup 0ms, collect 1.43s, tests 228.19s, environment 0ms, prepare 155ms)
+
+VITEST_EXIT=0

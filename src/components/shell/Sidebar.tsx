@@ -10,10 +10,11 @@ import {
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { loadPreferences } from "@/lib/preferences";
+import { Companion } from "@/components/vow/Companion";
+import { useCompanionAgent } from "@/lib/companion";
 import { latestMessageTime, relativeTime } from "@/lib/relative-time";
 import { useChrome } from "./ChromeContext";
 import { useMode } from "./ModeContext";
-import { useTheme, type ThemeSetting } from "./ThemeContext";
 
 export const SIDEBAR_LINKS = [
   { href: "/", label: "Chat", icon: MessageSquareText, title: "Start or resume a conversation" },
@@ -55,7 +56,6 @@ export function Sidebar({ rail = false }: { rail?: boolean }) {
   const router = useRouter();
   const { requestNewChat, setSidebarOpen, setPaletteOpen } = useChrome();
   const { warden, toggleWarden } = useMode();
-  const { setting, setSetting } = useTheme();
   const [name, setName] = useState("Ayan");
   const [recents, setRecents] = useState<RecentConversation[] | null>(null);
   const [recentsError, setRecentsError] = useState(false);
@@ -64,6 +64,14 @@ export function Sidebar({ rail = false }: { rail?: boolean }) {
   const [showAll, setShowAll] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const footRef = useRef<HTMLDivElement>(null);
+  const companionMode = (() => { try { return loadPreferences().companion ?? "full"; } catch { return "full" as const; } })();
+  const reduceMotion = (() => { try { return loadPreferences().reduceMotion ?? false; } catch { return false; } })();
+  const { conversationId } = useChrome();
+  const dockVisible = companionMode === "full" && (pathname !== "/" || conversationId !== null);
+  const { state: companionState, lookAtActivity } = useCompanionAgent(conversationId ?? null, dockVisible);
+  const wasDock = useRef(dockVisible);
+  const dockEntrance = dockVisible && !wasDock.current;
+  wasDock.current = dockVisible;
 
   useEffect(() => {
     try { setName(loadPreferences().displayName || "Ayan"); } catch { /* default */ }
@@ -147,6 +155,18 @@ export function Sidebar({ rail = false }: { rail?: boolean }) {
             </Link>
           );
         })}
+      {dockVisible ? (
+        <div className="shell-rail-dock" aria-hidden="true">
+          <Companion
+            variant={warden ? "warden" : "normal"}
+            liveliness="live"
+            reducedMotion={reduceMotion}
+            state={companionState}
+            lookAtActivity={lookAtActivity}
+            className="companion-rail"
+          />
+        </div>
+      ) : null}
       </nav>
     );
   }
@@ -180,7 +200,7 @@ export function Sidebar({ rail = false }: { rail?: boolean }) {
           );
         })}
       </nav>
-      <div style={{ minHeight: 0, overflowY: "auto", flex: "none" }}>
+      <div style={{ minHeight: 0, overflowY: "auto", flex: "1 1 auto" }}>
         <p className="shell-sect">
           <span>Recent Chats</span>
           <button
@@ -241,6 +261,22 @@ export function Sidebar({ rail = false }: { rail?: boolean }) {
           </button>
         ) : null}
       </div>
+      {dockVisible ? (
+        <div className="shell-dock" aria-label="VOW companion">
+          <Companion
+            variant={warden ? "warden" : "normal"}
+            liveliness="live"
+            reducedMotion={reduceMotion}
+            state={companionState}
+            lookAtActivity={lookAtActivity}
+            interactive
+            showBubble
+            className="companion-dock"
+            entrance={dockEntrance}
+            label={warden ? "Interact with VOW Warden mascot" : "Interact with VOW mascot"}
+          />
+        </div>
+      ) : null}
       <div className="shell-side-foot" ref={footRef}>
         {menuOpen ? (
           <div className="shell-account-menu" role="menu" aria-label="Account">
@@ -253,12 +289,7 @@ export function Sidebar({ rail = false }: { rail?: boolean }) {
         ) : null}
         <button type="button" className="shell-space" aria-haspopup="menu" aria-expanded={menuOpen} onClick={() => setMenuOpen((v) => !v)} title={`${name}’s workspace`}>
           <span className="shell-ava" aria-hidden="true">
-            <svg viewBox="0 0 32 32" width="32" height="32" fill="none">
-              <circle cx="16" cy="16" r="16" fill="#6366f1" />
-              <circle cx="16" cy="13" r="6" fill="#fde047" />
-              <path d="M10 13c0-3.3 2.7-6 6-6s6 2.7 6 6" fill="#312e81" />
-              <path d="M6 28c0-5.5 4.5-10 10-10s10 4.5 10 10" fill="#4338ca" />
-            </svg>
+            <Image src={warden ? "/assets/vow/warden.webp" : "/assets/vow/mascot.webp"} alt="" width={32} height={32} />
           </span>
           <span style={{ minWidth: 0, flex: 1, textAlign: "left" }}>
             <span style={{ display: "block", fontSize: "var(--ds-text-14)", fontWeight: 600 }}>My Space</span>
@@ -266,30 +297,6 @@ export function Sidebar({ rail = false }: { rail?: boolean }) {
           </span>
           <ChevronRight size={15} aria-hidden="true" style={{ opacity: 0.5 }} />
         </button>
-        <div className="shell-theme-row">
-          <p className="shell-theme-label">Theme</p>
-          <div role="group" aria-label="Color theme" style={{ display: "inline-flex", gap: 2 }}>
-            {(["light", "dark", "system"] as ThemeSetting[]).map((v) => (
-              <button
-                key={v}
-                type="button"
-                aria-pressed={setting === v}
-                onClick={() => setSetting(v)}
-                className="shell-iconbtn"
-                style={{
-                  minWidth: 44,
-                  fontSize: "var(--ds-text-12)",
-                  fontWeight: 600,
-                  textTransform: "capitalize",
-                  background: setting === v ? "var(--ds-accent-wash)" : undefined,
-                  color: setting === v ? "var(--ds-accent)" : undefined,
-                }}
-              >
-                {v === "system" ? "Auto" : v}
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
     </aside>
   );

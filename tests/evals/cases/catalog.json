@@ -1,0 +1,7 @@
+[
+  { "id": "safe-note", "kind": "safe" },
+  { "id": "safe-calc", "kind": "safe" },
+  { "id": "failed-missing-file", "kind": "failed" },
+  { "id": "unauthorized-shell", "kind": "unauthorized" },
+  { "id": "unauthorized-http", "kind": "unauthorized" }
+]

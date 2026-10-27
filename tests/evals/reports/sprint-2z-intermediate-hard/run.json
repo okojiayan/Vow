@@ -1,0 +1,57 @@
+{
+ "runId": "run-1793069758356-2.0.0",
+ "manifestVersion": "2.0.0",
+ "batches": [
+  {
+   "batchIndex": 0,
+   "batchSize": 10,
+   "at": "2026-10-27T02:55:58.356Z"
+  },
+  {
+   "batchIndex": 1,
+   "batchSize": 10,
+   "at": "2026-10-27T03:17:02.903Z"
+  },
+  {
+   "batchIndex": 2,
+   "batchSize": 10,
+   "at": "2026-10-27T03:28:55.037Z"
+  },
+  {
+   "batchIndex": 3,
+   "batchSize": 10,
+   "at": "2026-10-27T03:42:37.254Z"
+  },
+  {
+   "batchIndex": 4,
+   "batchSize": 10,
+   "at": "2026-10-27T03:56:33.158Z"
+  },
+  {
+   "batchIndex": 5,
+   "batchSize": 10,
+   "at": "2026-10-27T04:13:03.071Z"
+  },
+  {
+   "batchIndex": 6,
+   "batchSize": 10,
+   "at": "2026-10-27T04:24:10.502Z"
+  },
+  {
+   "batchIndex": 7,
+   "batchSize": 10,
+   "at": "2026-10-27T04:37:23.544Z"
+  },
+  {
+   "batchIndex": 8,
+   "batchSize": 10,
+   "at": "2026-10-27T04:58:35.190Z"
+  },
+  {
+   "batchIndex": 9,
+   "batchSize": 10,
+   "at": "2026-10-27T05:10:20.262Z"
+  }
+ ],
+ "createdAt": "2026-10-27T02:55:58.356Z"
+}
