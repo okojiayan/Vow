@@ -3,7 +3,7 @@ import fs from 'node:fs';
 const AXE = '/Users/ayan/Vow-repo/tools/audit/node_modules/axe-core/axe.min.js';
 const BASE = 'http://localhost:3140';
 const ROUTES = ['/', '/tasks', '/memory', '/search', '/library', '/history', '/routines', '/tools', '/skills', '/settings', '/account', '/devices', '/evaluation', '/design-system/components'];
-const THEMES = ['light', 'dark', 'warden'];
+const THEMES = (process.env.AUDIT_THEMES ? process.env.AUDIT_THEMES.split(',') : ['light', 'dark', 'warden']);
 const WIDTHS = [1440, 390, 320];
 const KEY = 'vow-ds-theme-v1';
 function lum(hex) {
@@ -99,13 +99,13 @@ for (const route of ROUTES) {
           } catch (e) { row.palette = { error: String(e).slice(0, 100) }; }
         }
       } catch (e) { row.error = String(e).slice(0, 200); }
-      fs.appendFileSync('/Users/ayan/Vow-repo/tools/audit/audit2-progress.log', JSON.stringify({ route, theme, w, dt: row.dataTheme, ov: row.overflow && row.overflow.delta, taps: row.taps && row.taps.under44, axe: row.axe, kb: row.kb && (row.kb.stops + '/' + row.kb.distinct + '/lost' + row.kb.lost), pal: row.palette }));
+      fs.appendFileSync('/Users/ayan/Vow-repo/tools/audit/audit2-progress-' + (process.env.AUDIT_TAG || 'all') + '.log', JSON.stringify({ route, theme, w, dt: row.dataTheme, ov: row.overflow && row.overflow.delta, taps: row.taps && row.taps.under44, axe: row.axe, kb: row.kb && (row.kb.stops + '/' + row.kb.distinct + '/lost' + row.kb.lost), pal: row.palette }));
       report.routes.push(row);
       await ctx.close();
     }
   }
 }
 await browser.close();
-fs.writeFileSync('/Users/ayan/Vow-repo/tools/audit/audit2-report.json', JSON.stringify(report, null, 1));
+fs.writeFileSync('/Users/ayan/Vow-repo/tools/audit/audit2-report-' + (process.env.AUDIT_TAG || 'all') + '.json', JSON.stringify(report, null, 1));
 console.log('DONE2 routes=' + report.routes.length);
 console.log('CONTRAST2 ' + JSON.stringify(report.contrast));
