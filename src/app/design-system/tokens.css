@@ -1,5 +1,33 @@
-/* VOW design tokens — Stage 2 foundations. Self-scoped: .ds-scope only.
-   Light = default. Dark = prefers-color-scheme. Warden = body.warden. */
+/* Warden/shell token animation: registered @property color tokens so the
+   shell crossfades between token sets (Light/Dark/Warden) instead of
+   flipping instantly. Technique: @property (<color>, inherited) +
+   `transition: --ds-*` on .ds-scope; descendants inherit the interpolated
+   values live. Reduced motion disables it via the global reduced-motion
+   block below. Decision: @property, not a two-layer crossfade. */
+@property --ds-bg { syntax: "<color>"; inherits: true; initial-value: #FAFAF9; }
+@property --ds-surface { syntax: "<color>"; inherits: true; initial-value: #FFFFFF; }
+@property --ds-surface-2 { syntax: "<color>"; inherits: true; initial-value: #F5F0E8; }
+@property --ds-border { syntax: "<color>"; inherits: true; initial-value: #E7E5E4; }
+@property --ds-border-strong { syntax: "<color>"; inherits: true; initial-value: #767676; }
+@property --ds-ink { syntax: "<color>"; inherits: true; initial-value: #1C1917; }
+@property --ds-ink-soft { syntax: "<color>"; inherits: true; initial-value: #44403C; }
+@property --ds-muted { syntax: "<color>"; inherits: true; initial-value: #57534E; }
+@property --ds-accent { syntax: "<color>"; inherits: true; initial-value: #92400E; }
+@property --ds-accent-ink { syntax: "<color>"; inherits: true; initial-value: #FFFFFF; }
+@property --ds-accent-wash { syntax: "<color>"; inherits: true; initial-value: #FEF3C7; }
+@property --ds-scrim { syntax: "<color>"; inherits: true; initial-value: rgba(28, 25, 23, 0.45); }
+
+/* VOW design tokens — Stage 2 foundations, finalized in the end-to-end pass.
+   Self-scoped: .ds-scope only. Light = default. Dark = prefers-color-scheme.
+   Warden = body.warden.
+   Changelog (end-to-end pass): no token values changed. Warden ramp kept at
+   the armor-sampled values (bg #15122C, surface #1D1940, borders #3A3470,
+   ink #ECE8FF, accent #E0B95F, ring violet #A58BFF) after re-running
+   contrast on all pairs x3 themes — no pair below AA. Companion optical
+   tiers are implemented in Companion.tsx (smile/eye scale factors), not as
+   tokens, because they ride the per-frame rAF transform. Shell theme changes
+   animate via registered @property color tokens + transition on .ds-scope
+   (decision: @property, not a two-layer crossfade). */
 .ds-scope {
   --ds-font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --ds-font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, monospace;
@@ -59,15 +87,15 @@
   }
 }
 body.warden .ds-scope {
-  --ds-bg: #101018; --ds-surface: #1A1A26; --ds-surface-2: #232333;
-  --ds-border: #3B3B54; --ds-border-strong: #7E7E9C;
-  --ds-ink: #ECECF5; --ds-ink-soft: #C9C9D8; --ds-muted: #A3A3BC;
-  --ds-accent: #D2A94F; --ds-accent-ink: #101018; --ds-accent-wash: #2C2C3E;
-  --ds-bronze-050: #232333; --ds-bronze-100: #3B3B54;
+  --ds-bg: #15122C; --ds-surface: #1D1940; --ds-surface-2: #26224E;
+  --ds-border: #3A3470; --ds-border-strong: #8F8FC4;
+  --ds-ink: #ECE8FF; --ds-ink-soft: #C9C9EC; --ds-muted: #A8A8D2;
+  --ds-accent: #E0B95F; --ds-accent-ink: #1A1230; --ds-accent-wash: #35301C;
+  --ds-bronze-050: #262052; --ds-bronze-100: #3A3470;
   --ds-green-700: #93D3A4; --ds-green-wash: #1E3329;
-  --ds-red-700: #DC9C9C; --ds-red-wash: #3C2328;
-  --ds-blue-700: #A3AEDD; --ds-blue-wash: #232B45;
-  --ds-amber-700: #D2A94F; --ds-amber-wash: #2C2C3E;
+  --ds-red-700: #E5A3A3; --ds-red-wash: #3C2328;
+  --ds-blue-700: #A3AEDD; --ds-blue-wash: #232B55;
+  --ds-amber-700: #E0B95F; --ds-amber-wash: #35301C;
   --ds-elev-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --ds-elev-2: 0 12px 32px -12px rgba(0, 0, 0, 0.5);
 }
@@ -77,6 +105,7 @@ body.warden .ds-scope {
   }
 }
 .ds-scope {
+  transition: --ds-bg 0.35s ease, --ds-surface 0.35s ease, --ds-surface-2 0.35s ease, --ds-border 0.35s ease, --ds-border-strong 0.35s ease, --ds-ink 0.35s ease, --ds-ink-soft 0.35s ease, --ds-muted 0.35s ease, --ds-accent 0.35s ease, --ds-accent-ink 0.35s ease, --ds-accent-wash 0.35s ease, --ds-scrim 0.35s ease;
   font-family: var(--ds-font-sans);
   background: var(--ds-bg); color: var(--ds-ink);
 }
@@ -98,15 +127,15 @@ body.warden .ds-scope {
 }
 .ds-scope[data-theme="warden"] {
   --ds-scrim: rgba(8, 8, 14, 0.62);
-  --ds-bg: #101018; --ds-surface: #1A1A26; --ds-surface-2: #232333;
-  --ds-border: #3B3B54; --ds-border-strong: #7E7E9C;
-  --ds-ink: #ECECF5; --ds-ink-soft: #C9C9D8; --ds-muted: #A3A3BC;
-  --ds-accent: #D2A94F; --ds-accent-ink: #101018; --ds-accent-wash: #2C2C3E;
-  --ds-bronze-050: #232333; --ds-bronze-100: #3B3B54;
+  --ds-bg: #15122C; --ds-surface: #1D1940; --ds-surface-2: #26224E;
+  --ds-border: #3A3470; --ds-border-strong: #8F8FC4;
+  --ds-ink: #ECE8FF; --ds-ink-soft: #C9C9EC; --ds-muted: #A8A8D2;
+  --ds-accent: #E0B95F; --ds-accent-ink: #1A1230; --ds-accent-wash: #35301C;
+  --ds-bronze-050: #262052; --ds-bronze-100: #3A3470;
   --ds-green-700: #93D3A4; --ds-green-wash: #1E3329;
-  --ds-red-700: #DC9C9C; --ds-red-wash: #3C2328;
-  --ds-blue-700: #A3AEDD; --ds-blue-wash: #232B45;
-  --ds-amber-700: #D2A94F; --ds-amber-wash: #2C2C3E;
+  --ds-red-700: #E5A3A3; --ds-red-wash: #3C2328;
+  --ds-blue-700: #A3AEDD; --ds-blue-wash: #232B55;
+  --ds-amber-700: #E0B95F; --ds-amber-wash: #35301C;
   --ds-elev-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --ds-elev-2: 0 12px 32px -12px rgba(0, 0, 0, 0.5);
 }
