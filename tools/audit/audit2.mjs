@@ -91,7 +91,7 @@ for (const route of ROUTES) {
         row.kb = kbRes;
         if (route === '/' && w === 1440) {
           try {
-            await p.keyboard.press('Meta+K'); await p.waitForTimeout(500);
+            await p.keyboard.press('Meta+k'); await p.waitForTimeout(500);
             const opened = await p.evaluate(() => !!document.querySelector('[role="dialog"]'));
             await p.keyboard.press('Escape'); await p.waitForTimeout(400);
             const closed = await p.evaluate(() => !document.querySelector('[role="dialog"]'));
