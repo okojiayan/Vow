@@ -19,12 +19,17 @@ for (const theme of THEMES) {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const p = await ctx.newPage();
   if (theme !== 'warden') await p.addInitScript((t) => { try { localStorage.setItem('vow-ds-theme-v1', t); } catch(e){} }, theme);
-  await p.goto(BASE + (theme === 'warden' ? '/?mode=warden' : '/'), { waitUntil: 'networkidle', timeout: 30000 });
+  await p.goto(BASE + (theme === 'warden' ? '/?mode=warden' : '/'), { waitUntil: 'commit', timeout: 30000 });
+  await p.waitForFunction(() => document.querySelector('.ds-scope')?.innerText.length > 50, null, { timeout: 30000 }).catch(() => {});
+  await p.waitForFunction(
+    (exp) => document.querySelector('.ds-scope')?.getAttribute('data-theme') === exp,
+    theme, { timeout: 30000 },
+  ).catch(() => {});
   await p.waitForTimeout(600);
   if (theme === 'warden') { // dismiss celebratory overlay to reach steady state
-    try { const done = p.getByText('Done (Esc)', { exact: false }); if (await done.count()) await done.first().click(); } catch {}
     await p.keyboard.press('Escape').catch(() => {});
-    await p.waitForTimeout(500);
+    await p.waitForTimeout(600);
+    await p.waitForFunction(() => !document.querySelector('[data-testid="warden-stage"]'), { timeout: 8000 }).catch(() => {});
   }
   const info = await p.evaluate(() => { const el = document.querySelector('.ds-scope'); if (!el) return null; const s = getComputedStyle(el); const g = (n) => s.getPropertyValue(n).trim(); return { theme: el.getAttribute('data-theme'), bg: g('--ds-bg'), surface: g('--ds-surface'), ink: g('--ds-ink'), soft: g('--ds-ink-soft'), muted: g('--ds-muted'), border: g('--ds-border-strong'), accent: g('--ds-accent') }; }).catch(() => null);
   if (info) {
@@ -42,14 +47,19 @@ for (const route of ROUTES) {
       if (theme !== 'warden') await p.addInitScript((t) => { try { localStorage.setItem('vow-ds-theme-v1', t); } catch(e){} }, theme);
       const row = { route, theme, width: w };
       try {
-        await p.goto(BASE + route + (theme === 'warden' ? (route.includes('?') ? '&mode=warden' : '?mode=warden') : ''), { waitUntil: 'networkidle', timeout: 30000 });
+        await p.goto(BASE + route + (theme === 'warden' ? (route.includes('?') ? '&mode=warden' : '?mode=warden') : ''), { waitUntil: 'commit', timeout: 30000 });
         if (route === '/tasks') { await p.waitForFunction(() => !!document.querySelector('table') || /No tasks yet|No tasks match/.test(document.body.textContent || ''), { timeout: 15000 }).catch(() => {}); }
+        await p.waitForFunction(() => document.querySelector('.ds-scope')?.innerText.length > 50, null, { timeout: 30000 }).catch(() => {});
+        await p.waitForFunction(
+          (exp) => document.querySelector('.ds-scope')?.getAttribute('data-theme') === exp,
+          theme, { timeout: 30000 },
+        ).catch(() => {});
         await p.waitForTimeout(700);
         if (theme === 'warden') {
-          try { const done = p.getByText('Done (Esc)', { exact: false }); if (await done.count()) await done.first().click(); } catch {}
           await p.keyboard.press('Escape').catch(() => {});
-          await p.waitForTimeout(400);
-          row.overlayDismissed = await p.evaluate(() => !document.body.textContent.includes('WARDEN 7-STEP TRANSFORMATION'));
+          await p.waitForTimeout(500);
+          await p.waitForFunction(() => !document.querySelector('[data-testid="warden-stage"]'), { timeout: 8000 }).catch(() => {});
+          row.overlayDismissed = await p.evaluate(() => !document.querySelector('[data-testid="warden-stage"]'));
         }
         row.dataTheme = await p.evaluate(() => { const el = document.querySelector('.ds-scope'); return el && el.getAttribute('data-theme'); }).catch(() => null);
         row.overflow = await p.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: window.innerWidth, delta: document.documentElement.scrollWidth - window.innerWidth }));

@@ -9,7 +9,9 @@ import {
 import { useMode } from "@/components/shell/ModeContext";
 import { useChrome } from "@/components/shell/ChromeContext";
 import { AutonomyMenu } from "@/components/autonomy/AutonomyMenu";
-import { HomeMascot } from "@/components/vow/HomeMascot";
+import { Companion } from "@/components/vow/Companion";
+import { setMicActive, useCompanionAgent } from "@/lib/companion";
+import { loadPreferences } from "@/lib/preferences";
 import {
   dedupeOutcomeBlocks,
   isActiveTaskStatus,
@@ -314,6 +316,7 @@ function WorkspaceInner() {
     if (recording) {
       try { recogRef.current?.stop(); } catch { /* ignore */ }
       setRecording(false);
+      setMicActive(false);
       return;
     }
     const W = window as unknown as { SpeechRecognition?: new () => { lang: string; interimResults: boolean; onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null; onerror: (() => void) | null; onend: (() => void) | null; start: () => void; stop: () => void }; webkitSpeechRecognition?: new () => { lang: string; interimResults: boolean; onresult: ((e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void) | null; onerror: (() => void) | null; onend: (() => void) | null; start: () => void; stop: () => void } };
@@ -327,11 +330,12 @@ function WorkspaceInner() {
         const t = e.results?.[0]?.[0]?.transcript ?? "";
         if (t) setComposerText((v) => (v ? v + " " : "") + t);
       };
-      rec.onerror = () => setRecording(false);
-      rec.onend = () => setRecording(false);
+      rec.onerror = () => { setRecording(false); setMicActive(false); };
+      rec.onend = () => { setRecording(false); setMicActive(false); };
       recogRef.current = rec;
       rec.start();
       setRecording(true);
+      setMicActive(true);
     } catch {
       flash("Voice input could not start. Type your message instead.");
     }
@@ -414,13 +418,30 @@ function WorkspaceInner() {
   }));
 
   const isEmpty = messages.length === 0 && !loading && !shownTask;
+  const companionMode = (() => { try { return loadPreferences().companion ?? "full"; } catch { return "full" as const; } })();
+  const { state: companionState, lookAtActivity } = useCompanionAgent(conversationId ?? null, isEmpty && companionMode === "full");
+  const reduceMotion = (() => { try { return loadPreferences().reduceMotion ?? false; } catch { return false; } })();
 
   return (
     <div className="shell-chat">
       <div ref={chatScrollRef} className="shell-chat-scroll">
+        {!isEmpty ? <h1 className="ds-sr">VOW chat</h1> : null}
         {isEmpty ? (
           <div className="shell-empty">
-            <HomeMascot warden={wardenVisual} />
+            {companionMode !== "off" ? (
+              <Companion
+                variant={wardenVisual ? "warden" : "normal"}
+                liveliness={companionMode === "subtle" ? "static" : "live"}
+                calm={companionMode === "subtle"}
+                reducedMotion={reduceMotion}
+                state={companionState}
+                lookAtActivity={lookAtActivity}
+                interactive
+                showBubble
+                className="companion-hero"
+                label={wardenVisual ? "Interact with VOW Warden mascot" : "Interact with VOW mascot"}
+              />
+            ) : null}
             <h1 className="shell-greet">{greeting.headline} {greeting.sub}</h1>
             <div className="shell-sugs" role="group" aria-label="Suggestions">
               {CHIPS.map(({ label, text }) => (
