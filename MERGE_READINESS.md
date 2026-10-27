@@ -20,12 +20,15 @@
 ## How to run every check
 - `npx tsc --noEmit`
 - `npx vitest run tests/unit/task-display.test.ts` (18/18)
-- `npx vitest run` (full; excludes live-backend benchmark by config)
-- Dev server `:3140`, then:
-  `node tools/audit/companion-face-rig.mjs [--sabotage]`
-  `node tools/audit/warden-lifecycle.mjs`
-  `node tools/audit/companion-placement.mjs`
-  `node tools/audit/audit2.mjs` (14 routes × 1440/390/320 × light/dark/warden)
+- `npx vitest run` — 103 files, 681 tests, all green
+- `node tools/audit/companion-face-rig.mjs` — PASS (drift 0.06-0.64px); `--sabotage` FAILS as designed
+- `node tools/audit/warden-lifecycle.mjs` — 8/8 PASS
+- `node tools/audit/companion-placement.mjs` — 12/12 PASS
+- `node tools/audit/verify-fixes.mjs` — 47/47 PASS (combos 5x, banner 9x, palette 3x, contrast)
+- `node tools/audit/contrast3.mjs` — 24/24 pairs AA
+- `node tools/audit/audit2.mjs` (or `AUDIT_THEMES=x AUDIT_TAG=x`) — 126 rows, zero failures (post-fix)
+- `node tools/audit/perf-fps.mjs` — 59.5fps
+- Shots: `/tmp/vow-shots/` — 60 full-app + 19 empty + 10 transformation + slots + grayscale + face-sizes
 
 ## Known limitations / open items (outside UI scope — backend decisions needed)
 - Supervised vs Assisted behave identically in the policy table; the
