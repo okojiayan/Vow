@@ -27,6 +27,17 @@ interface Props {
   entrance?: boolean;
 }
 
+// Smile curve traced from the render: short thick U, depth ~28% of width,
+// tilted -8 deg (right side higher, like the head lean). SMILE_Q maps the
+// pose value q to control depth; endpoints stay fixed so every agent-state
+// morph (grin, frown, sleepy) keeps the same character.
+const SMILE_Q = 0.3;
+const smileD = (hw: number, dd: number) => {
+  const c = hw * 0.63;
+  const r = (n: number) => +n.toFixed(2);
+  return `M${r(-hw)} 0C${r(-c)} ${r(dd)} ${r(c)} ${r(dd)} ${r(hw)} 0`;
+};
+
 const FELT = "#171110";
 const GLOW = "#FFF3D9";
 
@@ -184,7 +195,7 @@ export function Companion({
       eyeL.setAttribute("transform", es);
       eyeR.setAttribute("transform", es);
       const hw = g.smile.w * 50;
-      mouth.setAttribute("d", `M${-hw} 0Q0 ${S.q} ${hw} 0`);
+      mouth.setAttribute("d", smileD(hw, S.q * SMILE_Q));
       const h = Math.min(1, S.hp);
       if (arcL && arcR) { arcL.setAttribute("opacity", h.toFixed(2)); arcR.setAttribute("opacity", h.toFixed(2)); }
       const pillOp = (1 - h).toFixed(2);
@@ -247,8 +258,8 @@ export function Companion({
             <path ref={arcRRef} d={`M${-g.eyeR.w * 50} 2Q0 ${-g.eyeR.h * 55} ${g.eyeR.w * 50} 2`} fill="none" stroke={GLOW} strokeWidth="4" strokeLinecap="round" opacity="0" />
           </g>
         </g>
-        <g transform={`translate(${ex(g.smile.x)} ${ex(g.smile.y)})`}>
-          <path ref={mouthRef} d={`M${-g.smile.w * 50} 0Q2 18 ${g.smile.w * 50} 0`} fill="none" stroke={GLOW} strokeWidth="2.4" strokeLinecap="round" />
+        <g transform={`translate(${ex(g.smile.x)} ${ex(g.smile.y)}) rotate(-8)`}>
+          <path ref={mouthRef} d={smileD(g.smile.w * 50, 9 * SMILE_Q)} fill="none" stroke={GLOW} strokeWidth="3" strokeLinecap="round" />
         </g>
       </g>
     </svg>
