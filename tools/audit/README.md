@@ -16,3 +16,4 @@ light, dark, and Warden themes. Needs the dev server on :3140 and
 Warden runs dismiss the celebratory transformation overlay first, so the
 numbers describe the steady-state theme. `?demo=` hooks are production-gated
 in the app; `?mode=warden` only selects the theme for verification.
+- Face-rig rule (mascot prototype): `NODE_PATH=$PWD/node_modules node face-rig.mjs [file]` (exit 1 if the eyes do not ride the body hop).
