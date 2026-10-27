@@ -1,0 +1,137 @@
+/* Companion — reserved-slot mascot. In-flow only; never floats over content.
+   Slot sizes: hero 176 (96 on small screens), dock 72, rail 40, empty 88. */
+.companion {
+  position: relative;
+  width: 120px;
+  line-height: 0;
+}
+.companion-hero { width: 176px; margin: 0 auto; }
+@media (max-width: 640px) { .companion-hero { width: 96px; } }
+.companion-dock { width: 72px; margin: 0 auto; }
+.companion-rail { width: 40px; margin: 0 auto; }
+.companion-empty { width: 88px; margin: 0 auto; }
+.companion-mark { width: 28px; }
+
+.cp-btn {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 24px;
+  line-height: 0;
+}
+.cp-btn:focus-visible { outline: 2px solid var(--ds-accent); outline-offset: 4px; }
+
+/* Body group: carries hop/lean/wiggle/squash. The face and every overlay are
+   children of this group (rig rule) so they ride the transform. */
+.cp-body {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--cp-aspect, 1);
+  transform-origin: 50% 92%;
+}
+.companion[data-variant="warden"] .cp-body { --cp-aspect: 1310 / 1200; }
+.cp-base {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+/* Antenna lives on its own layer with a lagged rotation about the stem base.
+   The base image hides the antenna band via mask so nothing draws twice. */
+.cp-ant {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.cp-ant img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+.cp-ant-normal { transform-origin: 44% 26%; }
+.cp-ant-normal img {
+  clip-path: inset(2% 20% 63% 10%);
+  -webkit-mask-image: linear-gradient(to bottom, black 33%, transparent 37%);
+  mask-image: linear-gradient(to bottom, black 33%, transparent 37%);
+}
+.companion[data-variant="normal"] .cp-base {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 29.5%, black 33.5%);
+  mask-image: linear-gradient(to bottom, transparent 29.5%, black 33.5%);
+}
+.cp-ant-warden { transform-origin: 43% 23%; }
+.cp-ant-warden img {
+  clip-path: inset(1% 13% 62% 12%);
+  -webkit-mask-image: linear-gradient(to bottom, black 31%, transparent 35%);
+  mask-image: linear-gradient(to bottom, black 31%, transparent 35%);
+}
+.companion[data-variant="warden"] .cp-base {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 27.5%, black 31.5%);
+  mask-image: linear-gradient(to bottom, transparent 27.5%, black 31.5%);
+}
+/* Felt patches cover the render's own glowing eyes/smile so only the vector
+   face shows. Same group as the body, so they ride along. */
+.cp-patch { position: absolute; border-radius: 50%; pointer-events: none; }
+/* Vector face: positioned over the render, inherits the body transform. */
+.cp-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+/* Static slots: blink only, driven by CSS. */
+@keyframes cp-blink {
+  0%, 91%, 100% { transform: scaleY(1); }
+  94%, 96% { transform: scaleY(0.08); }
+}
+.cp-cssblink {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: cp-blink 4.6s ease-in-out infinite;
+}
+/* Speech bubble: sidebar-safe width, auto-dismissed by the component. */
+.cp-bubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  transform: translateX(-50%);
+  max-width: 200px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: var(--ds-surface);
+  color: var(--ds-ink-soft);
+  border: 1px solid var(--ds-border);
+  font-size: var(--ds-text-12);
+  line-height: 1.45;
+  white-space: normal;
+  text-align: center;
+  z-index: 2;
+}
+/* Armored shimmer sweep, about every 7s while visible. */
+.cp-shimmer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 42%, rgba(200, 170, 255, 0.35) 50%, transparent 58%);
+}
+.cp-shimmer.on { animation: cp-sweep 0.9s ease-out; }
+@keyframes cp-sweep { from { opacity: 0; } 25% { opacity: 1; } to { opacity: 0; } }
+/* Dock handoff entrance: transform only, 300ms. */
+@keyframes cp-enter { from { transform: scale(2.2); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.cp-enter .cp-body { animation: cp-enter 0.3s var(--ds-ease-out, ease-out); }
+@media (prefers-reduced-motion: reduce) {
+  .cp-enter .cp-body { animation: none; }
+  .cp-cssblink { animation-duration: 5.2s; }
+}
