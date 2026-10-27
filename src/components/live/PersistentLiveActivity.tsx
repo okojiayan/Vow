@@ -329,7 +329,7 @@ export function PersistentLiveActivity() {
       setDrawerOpen(false);
     }
     mounted.current = true;
-  }, [isRealActiveTask, displayApprovals.length, pinned, setDrawerOpen]);
+  }, [isRealActiveTask, displayApprovals.length, pinned, setDrawerOpen, drawerOpen]);
 
   useEffect(() => {
     const id = setInterval(() => void refresh(), 5000);

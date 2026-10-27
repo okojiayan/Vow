@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-import { StatusInline } from "./badges";
 
 export interface Column<T> {
   key: string;

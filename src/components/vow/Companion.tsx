@@ -41,6 +41,17 @@ const smileD = (hw: number, dd: number) => {
 const FELT = "#171110";
 const GLOW = "#FFF3D9";
 
+// Optical sizing by slot tier (silhouette and proportions never change;
+// only stroke/eye weight scales so the face stays legible at small sizes).
+// 176px hero + 88px empty = current geometry; 72px dock = smile x1.25,
+// eyes x1.1; 40px rail = smile x1.5, eyes x1.2. Smile length unchanged.
+const tierOf = (className: string) =>
+  className.includes("companion-rail")
+    ? { eye: 1.2, mouth: 1.5 }
+    : className.includes("companion-dock")
+      ? { eye: 1.1, mouth: 1.25 }
+      : { eye: 1, mouth: 1 };
+
 /**
  * The VOW companion. Rig rule: the vector face (eyes/smile) and every
  * overlay are children of the same .cp-body group that carries the body's
@@ -191,7 +202,10 @@ export function Companion({
       S.hp += (hp - S.hp) * kk; S.q += (q - S.q) * kk;
       const eOpen = Math.max(0.06, S.eh * (1 - P.blink));
       look.setAttribute("transform", `translate(${S.lx.toFixed(2)} ${S.ly.toFixed(2)})`);
-      const es = `scale(${S.ew.toFixed(3)} ${eOpen.toFixed(3)})`;
+      const tier = tierOf(className);
+      const es = `scale(${(S.ew * tier.eye).toFixed(3)} ${(eOpen * tier.eye).toFixed(3)})`;
+      if (mouth.getAttribute("stroke-width") !== String(3 * tier.mouth))
+        mouth.setAttribute("stroke-width", String(3 * tier.mouth));
       eyeL.setAttribute("transform", es);
       eyeR.setAttribute("transform", es);
       const hw = g.smile.w * 50;
@@ -226,10 +240,13 @@ export function Companion({
       }
     }, () => visibleRef.current);
     return unsub;
-  }, [live, calm, variant, hop]);
+  }, [live, calm, variant, hop, className, g.smile.w]);
 
   const ex = (f: number) => (f * 100).toFixed(2);
   const eyeW = (v: number) => ex(v);
+  const tier = tierOf(className);
+  const mouthW = 3 * tier.mouth;
+  const eyeF = live ? 1 : tier.eye; // live loop multiplies per frame instead
   const bodyAspect = g.aspect;
   const showBub = showBubble && bubble;
 
@@ -248,18 +265,18 @@ export function Companion({
       <g ref={lookRef} data-testid="companion-look">
         <g transform={`translate(${ex(g.eyeL.x)} ${ex(g.eyeL.y)})`}>
           <g ref={eyeLRef} className={live ? undefined : "cp-cssblink"}>
-            <rect x={-g.eyeL.w * 50} y={-g.eyeL.h * 50} width={eyeW(g.eyeL.w)} height={ex(g.eyeL.h)} rx={eyeW(g.eyeL.w / 2)} fill={GLOW} data-testid="companion-eye" />
+            <rect x={-g.eyeL.w * 50 * eyeF} y={-g.eyeL.h * 50 * eyeF} width={eyeW(g.eyeL.w * eyeF)} height={ex(g.eyeL.h * eyeF)} rx={eyeW((g.eyeL.w * eyeF) / 2)} fill={GLOW} data-testid="companion-eye" />
             <path ref={arcLRef} d={`M${-g.eyeL.w * 50} 2Q0 ${-g.eyeL.h * 55} ${g.eyeL.w * 50} 2`} fill="none" stroke={GLOW} strokeWidth="4" strokeLinecap="round" opacity="0" />
           </g>
         </g>
         <g transform={`translate(${ex(g.eyeR.x)} ${ex(g.eyeR.y)})`}>
           <g ref={eyeRRef} className={live ? undefined : "cp-cssblink"}>
-            <rect x={-g.eyeR.w * 50} y={-g.eyeR.h * 50} width={eyeW(g.eyeR.w)} height={ex(g.eyeR.h)} rx={eyeW(g.eyeR.w / 2)} fill={GLOW} />
+            <rect x={-g.eyeR.w * 50 * eyeF} y={-g.eyeR.h * 50 * eyeF} width={eyeW(g.eyeR.w * eyeF)} height={ex(g.eyeR.h * eyeF)} rx={eyeW((g.eyeR.w * eyeF) / 2)} fill={GLOW} />
             <path ref={arcRRef} d={`M${-g.eyeR.w * 50} 2Q0 ${-g.eyeR.h * 55} ${g.eyeR.w * 50} 2`} fill="none" stroke={GLOW} strokeWidth="4" strokeLinecap="round" opacity="0" />
           </g>
         </g>
         <g transform={`translate(${ex(g.smile.x)} ${ex(g.smile.y)}) rotate(-8)`}>
-          <path ref={mouthRef} d={smileD(g.smile.w * 50, 9 * SMILE_Q)} fill="none" stroke={GLOW} strokeWidth="3" strokeLinecap="round" />
+          <path ref={mouthRef} d={smileD(g.smile.w * 50, 9 * SMILE_Q)} fill="none" stroke={GLOW} strokeWidth={mouthW} strokeLinecap="round" />
         </g>
       </g>
     </svg>

@@ -2,13 +2,13 @@
 
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Check, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import { Phase3Panels } from "@/components/phase3/Phase3Panels";
 import { useMode } from "@/components/shell/ModeContext";
 import { useTheme, type ThemeSetting } from "@/components/shell/ThemeContext";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
-import { Field, Input, Select, Checkbox, Switch } from "@/components/ui/fields";
+import { Field, Input, Checkbox, Switch } from "@/components/ui/fields";
 import { Segmented } from "@/components/ui/Segmented";
 import { Dialog, Toast } from "@/components/ui/overlays";
 import { InlineBanner } from "@/components/ui/feedback";
@@ -38,18 +38,6 @@ const MODE_DISPLAY: Array<{ ui: UiAutonomyMode; name: string; backend: "supervis
 
 const RESTRICTIVENESS: Record<UiAutonomyMode, number> = { manual: 0, smart: 1, full: 2, warden: 3 };
 
-/**
- * Plain-language capability groups for the Autonomy rows. Every row below is
- * derived from the live policy table (BUILTIN_TOOLS + effectForMode, the same
- * effects the Warden gateway enforces). Raw tool IDs appear only inside the
- * expandable "Technical details" line of each row — never in the prose.
- */
-function groupOf(tool: string): "read" | "write" | "danger" | "shell" {
-  if (["fs.list", "fs.read", "memory.search", "calc.evaluate", "run_sql", "plugin.text-stats.analyze"].includes(tool)) return "read";
-  if (["fs.delete", "http.fetch"].includes(tool)) return "danger";
-  if (tool === "shell.exec") return "shell";
-  return "write";
-}
 
 const GROUP_TITLES = {
   read: "Read files and search memory",
@@ -299,6 +287,21 @@ function SettingsInner() {
                   ))}
                 </div>
                 <InlineBanner tone="info" title="Warden is a mode, not a theme" body="Warden applies its own identity over any theme. Enter it from Autonomy — it never lives in this list." />
+                <Segmented
+                  label="Companion"
+                  value={prefs.companion ?? "full"}
+                  onChange={(v) => update({ companion: v as "off" | "subtle" | "full" })}
+                  options={[
+                    { value: "off", label: "Off" },
+                    { value: "subtle", label: "Subtle" },
+                    { value: "full", label: "Full" },
+                  ]}
+                />
+                <p style={{ margin: 0, fontSize: "var(--ds-text-13)", color: "var(--ds-muted)", lineHeight: 1.6 }}>
+                  Off shows no mascot except the static brand mark. Subtle shows the home hero and
+                  empty states only, blinking, with no cursor tracking. Full adds the sidebar dock,
+                  rail mark, poke reactions, and cursor tracking.
+                </p>
                 <div>
                   <Button variant="secondary" size="sm" onClick={() => requestMode(uiMode === "warden" ? "smart" : "warden")}>
                     {uiMode === "warden" ? "Exit Warden mode" : "Enter Warden mode"}

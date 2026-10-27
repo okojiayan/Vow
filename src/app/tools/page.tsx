@@ -1,8 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
-import { relativeTime } from "@/lib/relative-time";
 import { useTheme } from "@/components/shell/ThemeContext";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
@@ -12,7 +10,7 @@ import { Dialog, Drawer, Toast } from "@/components/ui/overlays";
 import { EmptyState } from "@/components/ui/feedback";
 import { PermissionBadge } from "@/components/ui/badges";
 import { Stepper } from "@/components/ui/Stepper";
-import { BUILTIN_TOOLS, CONNECTORS, type Connector } from "@/lib/runtime-inventory";
+import { BUILTIN_TOOLS, CONNECTORS, } from "@/lib/runtime-inventory";
 
 interface ConnectionConfig {
   method: "oauth" | "token";
@@ -46,7 +44,6 @@ function StatusDot({ connected }: { connected: boolean }) {
 
 export default function IntegrationsPage() {
   const { effective } = useTheme();
-  const router = useRouter();
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "connected" | "available">("all");
   const [configs, setConfigs] = useState<Record<string, ConnectionConfig>>({});

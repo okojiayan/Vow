@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, ShieldCheck, TriangleAlert, UserRound, Bot, Zap } from "lucide-react";
+import { ChevronDown, ShieldCheck, TriangleAlert, Bot, Zap } from "lucide-react";
 import { AUTONOMY_OPTIONS, type UiAutonomyMode } from "@/lib/autonomy";
 
 
