@@ -38,7 +38,36 @@ const MODE_DISPLAY: Array<{ ui: UiAutonomyMode; name: string; backend: "supervis
 
 const RESTRICTIVENESS: Record<UiAutonomyMode, number> = { manual: 0, smart: 1, full: 2, warden: 3 };
 
-function describeMode(backend: "supervised" | "assisted" | "autonomous", warden: boolean): { alone: string; approval: string; never: string } {
+/**
+ * Plain-language capability groups for the Autonomy rows. Every row below is
+ * derived from the live policy table (BUILTIN_TOOLS + effectForMode, the same
+ * effects the Warden gateway enforces). Raw tool IDs appear only inside the
+ * expandable "Technical details" line of each row — never in the prose.
+ */
+function groupOf(tool: string): "read" | "write" | "danger" | "shell" {
+  if (["fs.list", "fs.read", "memory.search", "calc.evaluate", "run_sql", "plugin.text-stats.analyze"].includes(tool)) return "read";
+  if (["fs.delete", "http.fetch"].includes(tool)) return "danger";
+  if (tool === "shell.exec") return "shell";
+  return "write";
+}
+
+const GROUP_TITLES = {
+  read: "Read files and search memory",
+  write: "Save notes and write files",
+  danger: "Delete files or access the internet",
+  shell: "Run shell commands",
+} as const;
+
+interface ModeDescription {
+  alone: string;
+  approval: string;
+  never: string;
+  delta: string | null;
+  note: string | null;
+  technical: string;
+}
+
+function describeMode(backend: "supervised" | "assisted" | "autonomous", warden: boolean): ModeDescription {
   const allow: string[] = [];
   const approval: string[] = [];
   const never: string[] = [];
@@ -49,13 +78,42 @@ function describeMode(backend: "supervised" | "assisted" | "autonomous", warden:
     else never.push(t.name);
   }
   const fmt = (names: string[]) => (names.length > 0 ? names.join(", ") : "—");
-  return {
-    alone: warden
-      ? `Same allowed reads as Autonomous (${fmt(allow)}), with evidence-first surfacing and independent verification emphasis.`
-      : fmt(allow),
-    approval: fmt(approval),
-    never: fmt(never),
-  };
+  const storesMemoryAlone = allow.includes("memory.store");
+
+  const alone =
+    backend === "autonomous"
+      ? `${GROUP_TITLES.read} — listing and reading workspace files, searching saved memories, evaluating expressions, running read-only dataset queries and text analysis. ${GROUP_TITLES.write} — writing files, creating notes, saving memories, delegating scoped subtasks, invoking skills.`
+      : `${GROUP_TITLES.read} — listing and reading workspace files, searching saved memories, evaluating expressions, running read-only dataset queries. Plus saving memories (memory.store), which runs alone — see the note below.`;
+  const approvalText =
+    backend === "autonomous"
+      ? `${GROUP_TITLES.danger} — deleting a file or fetching a URL pauses for your approval first.`
+      : `${GROUP_TITLES.write} — writing files, creating notes, running text analysis, delegating a scoped subtask, or invoking a skill pauses for your approval first.`;
+  const neverText =
+    backend === "autonomous"
+      ? `${GROUP_TITLES.shell} — shell commands are denied in every mode, no exceptions.`
+      : `${GROUP_TITLES.danger} — deleting files and fetching URLs are denied outright, not even offered for approval. ${GROUP_TITLES.shell} — shell commands are denied in every mode, no exceptions.`;
+
+  const delta =
+    backend === "supervised"
+      ? null
+      : backend === "assisted"
+        ? "No difference from Supervised in the enforced policy table: every tool resolves to the same effect (verified against TOOL_PERMISSIONS in src/core/warden/policy.ts — no per-tool row distinguishes assisted from the default). The “pauses when scope expands” promise in this mode’s blurb is not implemented as a separate rule anywhere in the policy or gateway code; the only code difference is the stored mode label. If you want them to feel different, that needs a policy change — otherwise consider merging the two."
+        : warden
+          ? "Enforcement is identical to Autonomous: Warden maps to the same autonomous backend (backendModeFor in src/lib/autonomy.ts), so every tool resolves to the same allow / approval / deny. What Warden adds lives outside the allow/deny path: (1) identity — armored-mascot mark, purple accents, and a persistent topbar indicator; (2) evidence-first surfacing — collapsed plan → steps → verification timeline with an expandable evidence receipt per step and a verified / unverified label; (3) a policy log in Activity showing allowed / blocked / needs-approval entries, each with a reason, read from the same audit store the gateway writes in every mode; (4) confirmed activation — entering Warden calls GET /api/warden and only shows ACTIVE after the backend confirms the gateway. Verification (verifySteps) and audit logging run identically in all modes."
+          : "Different from Assisted: writing files, creating notes, text analysis, delegating subtasks, and invoking skills now run alone without approval. Deleting files and fetching URLs move from denied to needs-approval. Shell commands stay denied.";
+
+  const note =
+    backend === "autonomous" || warden
+      ? null
+      : storesMemoryAlone
+        ? "Plainly: saving a memory (memory.store) and running a dataset query (run_sql) need no approval in this mode. memory.store carries a write risk in the policy table yet its effect is allow — saving sounds like a write, but the gateway treats it like a read."
+        : null;
+
+  const technical = warden
+    ? `Same enforcement as Autonomous. Alone: ${fmt(allow)}. Needs approval: ${fmt(approval)}. Never: ${fmt(never)}.`
+    : `Alone: ${fmt(allow)}. Needs approval: ${fmt(approval)}. Never: ${fmt(never)}. Policy source: TOOL_PERMISSIONS in src/core/warden/policy.ts, mirrored for display in src/lib/runtime-inventory.ts.`;
+
+  return { alone, approval: approvalText, never: neverText, delta, note, technical };
 }
 
 function SettingsInner() {
@@ -267,10 +325,20 @@ function SettingsInner() {
                         </span>
                       </div>
                       <dl style={{ margin: "8px 0 0", display: "grid", gap: 4, fontSize: "var(--ds-text-13)", lineHeight: 1.55 }}>
-                        <div><dt style={{ display: "inline", fontWeight: 600, color: "var(--ds-muted)" }}>May do alone: </dt><dd style={{ display: "inline", margin: 0, color: "var(--ds-ink-soft)", fontFamily: "var(--ds-font-mono)" }}>{d.alone}</dd></div>
-                        <div><dt style={{ display: "inline", fontWeight: 600, color: "var(--ds-muted)" }}>Needs approval: </dt><dd style={{ display: "inline", margin: 0, color: "var(--ds-ink-soft)", fontFamily: "var(--ds-font-mono)" }}>{d.approval}</dd></div>
-                        <div><dt style={{ display: "inline", fontWeight: 600, color: "var(--ds-muted)" }}>Never allowed: </dt><dd style={{ display: "inline", margin: 0, color: "var(--ds-ink-soft)", fontFamily: "var(--ds-font-mono)" }}>{d.never}</dd></div>
+                        <div><dt style={{ display: "inline", fontWeight: 600, color: "var(--ds-muted)" }}>May do alone: </dt><dd style={{ display: "inline", margin: 0, color: "var(--ds-ink-soft)" }}>{d.alone}</dd></div>
+                        <div><dt style={{ display: "inline", fontWeight: 600, color: "var(--ds-muted)" }}>Needs approval: </dt><dd style={{ display: "inline", margin: 0, color: "var(--ds-ink-soft)" }}>{d.approval}</dd></div>
+                        <div><dt style={{ display: "inline", fontWeight: 600, color: "var(--ds-muted)" }}>Never allowed: </dt><dd style={{ display: "inline", margin: 0, color: "var(--ds-ink-soft)" }}>{d.never}</dd></div>
                       </dl>
+                      {d.note ? (
+                        <p style={{ margin: "8px 0 0", fontSize: "var(--ds-text-13)", lineHeight: 1.55, color: "var(--ds-ink-soft)", borderLeft: "2px solid var(--ds-accent)", paddingLeft: 8 }}>{d.note}</p>
+                      ) : null}
+                      {d.delta ? (
+                        <p style={{ margin: "8px 0 0", fontSize: "var(--ds-text-13)", lineHeight: 1.55, color: "var(--ds-ink-soft)" }}><span style={{ fontWeight: 600, color: "var(--ds-muted)" }}>What changes from the mode below: </span>{d.delta}</p>
+                      ) : null}
+                      <details style={{ margin: "8px 0 0", fontSize: "var(--ds-text-13)", color: "var(--ds-muted)" }}>
+                        <summary style={{ cursor: "pointer", fontWeight: 600 }}>Technical details (tool IDs)</summary>
+                        <p style={{ margin: "4px 0 0", fontFamily: "var(--ds-font-mono)", color: "var(--ds-ink-soft)", lineHeight: 1.55 }}>{d.technical}</p>
+                      </details>
                     </div>
                   );
                 })}
