@@ -1,5 +1,6 @@
 node_modules
 .next
+.next-*/
 out
 dist
 coverage
@@ -17,3 +18,4 @@ test-results
 
 # TypeScript incremental build cache
 *.tsbuildinfo
+.screenshots/
